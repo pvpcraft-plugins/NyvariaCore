@@ -6,6 +6,7 @@ package net.nyvaria.nyvariacore;
 import java.util.logging.Level;
 
 import net.nyvaria.nyvariacore.commands.InvSeeCommand;
+import net.nyvaria.nyvariacore.commands.SudoCommand;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
 
 import org.bukkit.entity.Player;
@@ -20,12 +21,16 @@ public class NyvariaCore extends JavaPlugin {
 	public static String PERM_INVSEE_MODIFY         = "nyvcore.invsee.modify";
 	public static String PERM_INVSEE_MODIFY_PREVENT = "nyvcore.invsee.modify.prevent";
 	
+	public static String PERM_SUDO                  = "nyvcore.sudo";
+	public static String PERM_SUDO_PREVENT          = "nyvcore.sudo.prevent";
+
 	// Core player list and listener
 	public  CorePlayerList      corePlayerList = null;
 	private NyvariaCoreListener listener       = null;
 	
 	// Commands
 	private InvSeeCommand       invseeCommand  = null;
+	private SudoCommand         sudoCommand    = null;
 
 	@Override
 	public void onEnable() {
@@ -44,9 +49,12 @@ public class NyvariaCore extends JavaPlugin {
 		}
 
 		// Create and set the commands
-		this.invseeCommand    = new InvSeeCommand(this);
-		this.getCommand(InvSeeCommand.CMD).setExecutor(this.invseeCommand);
+		this.invseeCommand = new InvSeeCommand(this);
+		this.sudoCommand   = new SudoCommand(this);
 		
+		this.getCommand(InvSeeCommand.CMD).setExecutor(this.invseeCommand);
+		this.getCommand(SudoCommand.CMD).setExecutor(this.sudoCommand);
+
 		this.log("Enabling " + this.getNameVersion() + " successful");
 	}
 	

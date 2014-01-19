@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.nyvaria.nyvariacore.NyvariaCore;
+import net.nyvaria.nyvariacore.NyvariaCoreCommand;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -20,68 +21,63 @@ import org.bukkit.inventory.Inventory;
  * @author Paul Thompson
  *
  */
-public class InvSeeCommand implements CommandExecutor {
+public class InvSeeCommand extends NyvariaCoreCommand implements CommandExecutor, TabCompleter {
 	public static String CMD = "invsee";
-	private final NyvariaCore plugin;
 	
 	public InvSeeCommand(NyvariaCore plugin) {
-		this.plugin = plugin;
+		super(plugin);
 	}
 	
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-	    String targetedPlayerName = args[0];
-	    ArrayList<String> matchedPlayerNames = new ArrayList<String>();
+	    ArrayList<String> completions = new ArrayList<String>();
 	    
-	    if (sender instanceof Player) {
-	    	Player player = (Player) sender;
-	    	
-	    	if (player.hasPermission(NyvariaCore.PERM_INVSEE)) {
-			    for (Player nextPlayer : plugin.getServer().matchPlayer(targetedPlayerName)) {
-			    	matchedPlayerNames.add(nextPlayer.getPlayerListName());
+		// If we have one argument, the first is a partial player name
+	    if (args.length == 1) {
+		    if ( (sender instanceof Player) && ((Player) sender).hasPermission(NyvariaCore.PERM_INVSEE) ) {
+		    	String partialPlayerName = args[0];
+		    	
+			    for (Player nextMatchingPlayer : plugin.getServer().matchPlayer(partialPlayerName)) {
+			    	completions.add(nextMatchingPlayer.getPlayerListName());
 			    }
-	    	}
+		    }
 	    }
 	
-		return matchedPlayerNames;
+		return completions;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// Make sure we have a Player
-		if ( !(sender instanceof Player) ) {
-			sender.sendMessage("You must be a player to use /" + InvSeeCommand.CMD);
+		if ( !NyvariaCoreCommand.isPlayer(sender, InvSeeCommand.CMD) ) {
 			return true;
 		}
 		
+		// Get the core player that has called this command
 		CorePlayer corePlayer = this.plugin.corePlayerList.get(sender);
 		
-	    if (!corePlayer.hasPermission(NyvariaCore.PERM_INVSEE)) {
-	    	corePlayer.sendMessage("Unknown command. Type \"help\"for help.");
+		// Check the command permission (though bukkit should have already stopped players without permission)
+		if (!NyvariaCoreCommand.hasCommandPermission(corePlayer, NyvariaCore.PERM_INVSEE)) {
 	    	return true;
 	    }
 		
+		// Check if we have enough arguments
 	    if (args.length != 1) {
 	    	return false;
 	    }
 	    
+		// Get the target player whose inventory we are peeking at
 	    String invPlayerName = args[0];
-	    List<Player> matchedPlayers = this.plugin.getServer().matchPlayer(invPlayerName);
-	    
-	    if (matchedPlayers.size() > 1) {
-	    	corePlayer.sendMessage(ChatColor.WHITE + invPlayerName + ChatColor.YELLOW + " matches more then one online player");
-	    	return true;
-	    	
-	    } else if (matchedPlayers.size() == 0) {
-	    	corePlayer.sendMessage(ChatColor.WHITE + invPlayerName + ChatColor.YELLOW + " does not appear to be an online player");
+	    Player invPlayer = this.getTargetPlayer(corePlayer, invPlayerName);
+	    if (invPlayer == null) {
 	    	return true;
 	    }
 	    
-	    Player invPlayer = matchedPlayers.get(0);
-	    
+		// Grab the inventory and open it up
 	    Inventory inv = invPlayer.getInventory();
 	    corePlayer.player.closeInventory();
 	    corePlayer.player.openInventory(inv);
 	    corePlayer.invsee = true;
 		
+	    // Return a happy result
 		return true;
 	}
 

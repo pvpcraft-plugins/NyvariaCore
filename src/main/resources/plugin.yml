@@ -9,10 +9,16 @@ main: net.nyvaria.nyvariacore.NyvariaCore
 
 commands:
   invsee:
-    description: Peek at a player inventory
+    description: Open another player's inventory
     permission: nyvcore.invsee
     permission-message: 'Unknown command. Type "help" for help.'
     usage: /invsee [player] - Open another player's inventory
+  
+  sudo:
+    description: Run a command as someone else
+    permission: nyvcore.sudo
+    permission-message: 'Unknown command. Type "help" for help.'
+    usage: Run a command as someone else
 
 permissions:
   # Base Permissions
@@ -23,8 +29,15 @@ permissions:
     description: Allows inventory modification while using the /invsee command
   
   nyvcore.invsee.modify.prevent:
-    description: Prevents inventory modification by others using the /invsee command
+    description: Prevents inventory modification by others using the /invsee command on a player
   
+  nyvcore.sudo:
+    description: Gives access to the /sudo command
+
+  nyvcore.sudo.prevent:
+    description: Gives access to the /sudo command
+    description: Prevents a player from being the target of a /sudo command
+
   # Group Permissions
   nyvcore.player:
     description: Gives player access to all NyvariaCore commands
@@ -41,3 +54,5 @@ permissions:
       nyvcore.invsee:                true
       nyvcore.invsee.modify:         true
       nyvcore.invsee.modify.prevent: true
+      nyvcore.sudo:                  true
+      nyvcore.sudo.prevent:          true

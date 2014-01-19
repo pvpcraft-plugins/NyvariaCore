@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.nyvaria</groupId>
 	<artifactId>NyvariaCore</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.5</version>
 	<name>NyvariaCore</name>
 	<url>https://github.com/nyvaria/NyvariaCore</url>
 	<description>General purpose Nyvaria plugin.</description>
