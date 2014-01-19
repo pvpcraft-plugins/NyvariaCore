@@ -1,0 +1,43 @@
+name: ${pom.name}
+description: ${pom.description}
+website: ${pom.url}
+version: ${pom.version}
+author: captbunzo
+
+main: net.nyvaria.nyvariacore.NyvariaCore
+#softdepend: [Vault]
+
+commands:
+  invsee:
+    description: Peek at a player inventory
+    permission: nyvcore.invsee
+    permission-message: 'Unknown command. Type "help" for help.'
+    usage: /invsee [player] - Open another player's inventory
+
+permissions:
+  # Base Permissions
+  nyvcore.invsee:
+    description: Gives access to the /invsee command
+
+  nyvcore.invsee.modify:
+    description: Allows inventory modification while using the /invsee command
+  
+  nyvcore.invsee.modify.prevent:
+    description: Prevents inventory modification by others using the /invsee command
+  
+  # Group Permissions
+  nyvcore.player:
+    description: Gives player access to all NyvariaCore commands
+    children:
+      
+  nyvcore.mod:
+    description: Gives mod access to all NyvariaCore commands
+    children:
+      nyvcore.invsee: true
+  
+  nyvcore.admin:
+    description: Gives admin level access to all NyvariaCore commands
+    children:
+      nyvcore.invsee:                true
+      nyvcore.invsee.modify:         true
+      nyvcore.invsee.modify.prevent: true
