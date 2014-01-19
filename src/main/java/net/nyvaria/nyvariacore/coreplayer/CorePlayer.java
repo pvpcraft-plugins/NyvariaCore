@@ -3,6 +3,8 @@
  */
 package net.nyvaria.nyvariacore.coreplayer;
 
+import net.nyvaria.nyvariacore.NyvariaCore;
+
 import org.bukkit.entity.Player;
 
 /**
@@ -24,5 +26,13 @@ public class CorePlayer {
 	
 	public boolean hasPermission(String permission) {
 		return this.player.hasPermission(permission);
+	}
+
+	public String getPrimaryGroup() {
+		if (NyvariaCore.zperms != null) {
+			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.player.getName());
+		} else {
+			return "Players";
+		}
 	}
 }

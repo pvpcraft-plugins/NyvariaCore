@@ -36,12 +36,12 @@ public class NyvariaCoreListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		plugin.corePlayerList.put(event.getPlayer());
+		plugin.corePlayerList.remove(event.getPlayer());
 	}
 	
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		this.plugin.corePlayerList.put(event.getPlayer());
+		this.plugin.corePlayerList.remove(event.getPlayer());
 	}
 
     @EventHandler(priority = EventPriority.MONITOR)

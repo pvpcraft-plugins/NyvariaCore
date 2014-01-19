@@ -4,6 +4,7 @@
 package net.nyvaria.nyvariacore.coreplayer;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
@@ -14,33 +15,39 @@ import org.bukkit.inventory.InventoryHolder;
  * @author Paul Thompson
  *
  */
-public class CorePlayerList {
-	private HashMap<Player, CorePlayer> list;
+public class CorePlayerList implements Iterable<CorePlayer> {
+	private HashMap<Player, CorePlayer> map;
 	
 	public CorePlayerList() {
-		this.list = new HashMap<Player, CorePlayer>();
+		this.map = new HashMap<Player, CorePlayer>();
 	}
 	
 	public void put(Player player) {
-		if (!this.list.containsKey(player)) {
-			CorePlayer traveler = new CorePlayer(player);
-			this.list.put(player, traveler);
+		if (!this.map.containsKey(player)) {
+			CorePlayer corePlayer = new CorePlayer(player);
+			this.map.put(player, corePlayer);
+		}
+	}
+	
+	public void put(CorePlayer corePlayer) {
+		if (!this.map.containsKey(corePlayer.player)) {
+			this.map.put(corePlayer.player, corePlayer);
 		}
 	}
 	
 	public void remove(Player player) {
-		if (this.list.containsKey(player)) {
-			this.list.remove(player);
+		if (this.map.containsKey(player)) {
+			this.map.remove(player);
 		}
 	}
 	
 	public CorePlayer get(Player player) {
 		CorePlayer corePlayer = null;
 		
-		if (this.list.containsKey(player)) {
-			corePlayer = this.list.get(player);
+		if (this.map.containsKey(player)) {
+			corePlayer = this.map.get(player);
 		}
-		
+
 		return corePlayer;
 	}
 	
@@ -57,6 +64,14 @@ public class CorePlayerList {
 	}
 	
 	public void clear() {
-		this.list.clear();
+		this.map.clear();
+	}
+	
+	public Iterator<CorePlayer> iterator() {
+		return this.map.values().iterator();
+	}
+	
+	public int length() {
+		return this.map.size();
 	}
 }

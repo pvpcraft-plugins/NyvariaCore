@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
@@ -95,7 +94,7 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
         final String sudoCmdAndArgs = sudoCmd + " " + getFinalArg(sudoCmdArgs, 0);
         
         // Inform the sender of what we are doing
-        sender.sendMessage(ChatColor.YELLOW + "Forcing " + ChatColor.WHITE + otherPlayer.getName() + ChatColor.YELLOW + " to run:" + ChatColor.WHITE + "/" + sudoCmdAndArgs);
+        sender.sendMessage(ChatColor.YELLOW + "Forcing " + ChatColor.WHITE + otherPlayer.getName() + ChatColor.YELLOW + " to run: " + ChatColor.WHITE + "/" + sudoCmdAndArgs);
         
         // Run the command
     	this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable() {

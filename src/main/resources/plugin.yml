@@ -5,7 +5,7 @@ version: ${pom.version}
 author: captbunzo
 
 main: net.nyvaria.nyvariacore.NyvariaCore
-#softdepend: [Vault]
+depend: [zPermissions]
 
 commands:
   invsee:
@@ -19,6 +19,13 @@ commands:
     permission: nyvcore.sudo
     permission-message: 'Unknown command. Type "help" for help.'
     usage: Run a command as someone else
+
+  who:
+    description: List who is on the server
+    aliases: list
+    permission: nyvcore.who
+    permission-message: 'Unknown command. Type "help" for help.'
+    usage: List who is on the server
 
 permissions:
   # Base Permissions
@@ -38,15 +45,20 @@ permissions:
     description: Gives access to the /sudo command
     description: Prevents a player from being the target of a /sudo command
 
+  nyvcore.who:
+    description: Gives access to the /who command
+
   # Group Permissions
   nyvcore.player:
     description: Gives player access to all NyvariaCore commands
     children:
+      nyvcore.who: true
       
   nyvcore.mod:
     description: Gives mod access to all NyvariaCore commands
     children:
       nyvcore.invsee: true
+      nyvcore.who:    true
   
   nyvcore.admin:
     description: Gives admin level access to all NyvariaCore commands
@@ -56,3 +68,5 @@ permissions:
       nyvcore.invsee.modify.prevent: true
       nyvcore.sudo:                  true
       nyvcore.sudo.prevent:          true
+      nyvcore.who:                   true
+      

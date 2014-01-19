@@ -5,12 +5,12 @@ package net.nyvaria.nyvariacore;
 
 import java.util.List;
 
-import net.nyvaria.nyvariacore.commands.InvSeeCommand;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -55,13 +55,32 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
     	return true;
 	}
 
+    protected static boolean hasCommandPermission(CommandSender sender, String permission) {
+    	if (sender instanceof Player) {
+    		return NyvariaCoreCommand.hasCommandPermission((Player) sender, permission);
+    	} else if (sender instanceof ConsoleCommandSender) {
+    		return NyvariaCoreCommand.hasCommandPermission((ConsoleCommandSender) sender, permission);
+    	}
+    	
+    	return false;
+    }
+    
     protected static boolean hasCommandPermission(CorePlayer corePlayer, String permission) {
     	return NyvariaCoreCommand.hasCommandPermission(corePlayer.player, permission);
     }
     
     protected static boolean hasCommandPermission(Player player, String permission) {
         if (!player.hasPermission(permission)) {
-        	player.sendMessage("Unknown command. Type \"help\"for help.");
+        	player.sendMessage("Unknown command. Type \"help\"for help..");
+        	return false;
+        }
+        
+        return true;
+	}
+    
+    protected static boolean hasCommandPermission(ConsoleCommandSender console, String permission) {
+        if (!console.hasPermission(permission)) {
+        	console.sendMessage("Unknown command. Type \"help\"for help.");
         	return false;
         }
         

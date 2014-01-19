@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.nyvaria</groupId>
 	<artifactId>NyvariaCore</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.9</version>
 	<name>NyvariaCore</name>
 	<url>https://github.com/nyvaria/NyvariaCore</url>
 	<description>General purpose Nyvaria plugin.</description>
@@ -51,6 +51,10 @@
 			<url>http://repo.bukkit.org/content/groups/public</url>
 		</repository>
 		<repository>
+			<id>tyrannyofheaven.org</id>
+			<url>http://maven.tyrannyofheaven.org/</url>
+		</repository>
+		<repository>
 			<id>vault-repo</id>
 			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
 		</repository>
@@ -61,6 +65,12 @@
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.7.2-R0.3-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.tyrannyofheaven.bukkit</groupId>
+			<artifactId>zPermissions</artifactId>
+			<version>[0.9.8,)</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
