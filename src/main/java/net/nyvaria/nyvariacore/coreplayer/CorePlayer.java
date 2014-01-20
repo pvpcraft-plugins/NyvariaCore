@@ -24,6 +24,7 @@ package net.nyvaria.nyvariacore.coreplayer;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coregroup.CoreGroup;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -32,53 +33,67 @@ import org.bukkit.metadata.FixedMetadataValue;
  *
  */
 public class CorePlayer {
-	public final Player player;
-	public boolean invsee;
+	public final OfflinePlayer offlinePlayer;
+	public final Player        player;
+	public boolean             invsee;
 	
 	public CorePlayer(Player player) {
-		this.player = player;
-		this.invsee = false;
+		this.player        = player;
+		this.offlinePlayer = player;
+		this.invsee        = false;
+		
 		this.setAfk(false);
 	}
-	
+
+	public CorePlayer(OfflinePlayer offlinePlayer) {
+		this.player        = null;
+		this.offlinePlayer = offlinePlayer;
+		this.invsee        = false;
+	}
+
 	public void sendMessage(String message) {
-		this.player.sendMessage(message);
+		if (player != null) {
+			this.player.sendMessage(message);
+		}
 	}
 	
 	public boolean hasPermission(String permission) {
-		return this.player.hasPermission(permission);
+		if (player != null) {
+			return this.player.hasPermission(permission);
+		}
+		return false;
 	}
 
 	public String getPrettyName() {
 		String group = this.getPrimaryGroup();
-		return CoreGroup.getGroupPrefix(group) + this.player.getName() + CoreGroup.getGroupSuffix(group);
+		return CoreGroup.getGroupPrefix(group) + this.offlinePlayer.getName() + CoreGroup.getGroupSuffix(group);
 	}
 	
 	public String getPrimaryGroup() {
 		if (NyvariaCore.zperms != null) {
-			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.player.getName());
+			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.offlinePlayer.getName());
 		} else {
 			return "Players";
 		}
 	}
 	
 	public void setAfk(boolean afk) {
-        player.setMetadata("afk", new FixedMetadataValue(NyvariaCore.instance, afk));
+		if (player != null) {
+			player.setMetadata("afk", new FixedMetadataValue(NyvariaCore.instance, afk));
+		}
 	}
 	
 	public boolean isAfk() {
-		if (player.hasMetadata("afk")) {
+		if ( (player != null) && player.hasMetadata("afk") ) {
 			return player.getMetadata("afk").get(0).asBoolean();
 		}
-		
 		return false;
 	}
 	
 	public boolean isVanished() {
-		if (player.hasMetadata("vanished")) {
+		if ( (player != null) && player.hasMetadata("vanished") ) {
 			return player.getMetadata("vanished").get(0).asBoolean();
 		}
-		
 		return false;
 	}
 }

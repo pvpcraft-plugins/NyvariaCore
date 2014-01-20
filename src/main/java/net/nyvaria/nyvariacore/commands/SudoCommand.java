@@ -48,11 +48,11 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
 	}
 	
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-	    ArrayList<String> completions = new ArrayList<String>();
+	    List<String> completions = new ArrayList<String>();
 	    
 		// If we have one argument, the first is a partial player name
 	    if (args.length == 1) {
-		    if ( (sender instanceof Player) && ((Player) sender).hasPermission(NyvariaCore.PERM_SUDO) ) {
+		    if ( (sender instanceof Player) && sender.hasPermission(NyvariaCore.PERM_SUDO) ) {
 		    	String partialPlayerName = args[0];
 		    	
 			    for (Player nextMatchingPlayer : plugin.getServer().matchPlayer(partialPlayerName)) {
@@ -62,7 +62,7 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
 		
 		// If we have two arguments, the second is a partial command
 	    } else if (args.length == 2)  {
-	    	// It would be nice to add command completion here
+	    	// It would be nice if we could match on command names
 	    }
 	    
 		return completions;
@@ -88,7 +88,7 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
 	    
 		// Get the target player whose inventory we are peeking at
 	    String otherPlayerName = args[0];
-	    final Player otherPlayer = this.getTargetPlayer(corePlayer, otherPlayerName);
+	    final Player otherPlayer = this.getOnlinePlayer(otherPlayerName, corePlayer);
 	    if (otherPlayer == null) {
 	    	return true;
 	    }

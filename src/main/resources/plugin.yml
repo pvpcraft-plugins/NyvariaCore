@@ -20,6 +20,12 @@ commands:
     permission-message: 'Unknown command. Type "help" for help..'
     usage: /invsee [player] - Open another player's inventory
   
+  lastseen:
+    description: See the last time someone was on the server
+    permission: nyvcore.lastseen
+    permission-message: 'Unknown command. Type "help" for help..'
+    usage: /lastseen [player] - See the last time someone was on the server
+  
   sudo:
     description: Run a command as someone else
     permission: nyvcore.sudo
@@ -40,43 +46,48 @@ permissions:
   
   nyvcore.invsee:
     description: Gives access to the /invsee command
-
+  
   nyvcore.invsee.modify:
     description: Allows inventory modification while using the /invsee command
   
   nyvcore.invsee.modify.prevent:
     description: Prevents inventory modification by others using the /invsee command on a player
   
+  nyvcore.lastseen:
+    description: Gives access to the /lastseen command
+  
   nyvcore.sudo:
     description: Gives access to the /sudo command
-
+  
   nyvcore.sudo.prevent:
     description: Gives access to the /sudo command
     description: Prevents a player from being the target of a /sudo command
-
+  
   nyvcore.who:
     description: Gives access to the /who command
-
+  
   # Group Permissions
   nyvcore.player:
     description: Gives player access to all NyvariaCore commands
     children:
-      nyvcore.afk: true
-      nyvcore.who: true
-      
+      nyvcore.afk:      true
+      nyvcore.lastseen: true
+      nyvcore.who:      true
+  
   nyvcore.mod:
     description: Gives mod access to all NyvariaCore commands
     children:
-      nyvcore.afk:    true
-      nyvcore.invsee: true
-      nyvcore.who:    true
+      nyvcore.afk:      true
+      nyvcore.invsee:   true
+      nyvcore.lastseen: true
+      nyvcore.who:      true
   
   nyvcore.admin:
     description: Gives admin level access to all NyvariaCore commands
     children:
       nyvcore.invsee:        true
       nyvcore.invsee.modify: true
+      nyvcore.lastseen:      true
       nyvcore.sudo:          true
       nyvcore.sudo.prevent:  true
       nyvcore.who:           true
-      

@@ -47,7 +47,7 @@ public class InvSeeCommand extends NyvariaCoreCommand implements CommandExecutor
 	}
 	
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-	    ArrayList<String> completions = new ArrayList<String>();
+	    List<String> completions = new ArrayList<String>();
 	    
 		// If we have one argument, the first is a partial player name
 	    if (args.length == 1) {
@@ -84,7 +84,7 @@ public class InvSeeCommand extends NyvariaCoreCommand implements CommandExecutor
 	    
 		// Get the target player whose inventory we are peeking at
 	    String invPlayerName = args[0];
-	    Player invPlayer = this.getTargetPlayer(corePlayer, invPlayerName);
+	    Player invPlayer = this.getOnlinePlayer(invPlayerName, corePlayer);
 	    if (invPlayer == null) {
 	    	return true;
 	    }

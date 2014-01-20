@@ -21,75 +21,23 @@
  */
 package net.nyvaria.utils;
 
-import org.bukkit.ChatColor;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+
+import net.nyvaria.nyvariacore.NyvariaCore;
 
 /**
  * @author Paul Thompson, Drathus
  *
  */
 public class StringUtils {
-
-	private static enum ColorMap {
-		// Colours
-		BLACK       ("&0", ChatColor.BLACK        ),
-		DARK_BLUE   ("&1", ChatColor.DARK_BLUE    ),
-		DARK_GREEN  ("&2", ChatColor.DARK_GREEN   ),
-		DARK_AQUA   ("&3", ChatColor.DARK_AQUA    ),
-		DARK_RED    ("&4", ChatColor.DARK_RED     ),
-		DARK_PURPLE ("&5", ChatColor.DARK_PURPLE  ),
-		GOLD        ("&6", ChatColor.GOLD         ),
-		GRAY        ("&7", ChatColor.GRAY         ),
-		DARK_GRAY   ("&8", ChatColor.DARK_GRAY    ),
-		BLUE        ("&9", ChatColor.BLUE         ),
-		GREEN       ("&A", ChatColor.GREEN        ),
-		AQUA        ("&B", ChatColor.AQUA         ),
-		RED         ("&C", ChatColor.RED          ),
-		LIGHT_PURPLE("&D", ChatColor.LIGHT_PURPLE ),
-		YELLOW      ("&E", ChatColor.YELLOW       ),
-		WHITE       ("&F", ChatColor.WHITE        ),
-		
-		// Formatting
-		MAGIC       ("&K", ChatColor.MAGIC        ),
-		BOLD        ("&L", ChatColor.BOLD         ),
-		STRIKE      ("&M", ChatColor.STRIKETHROUGH),
-		UNDERLINED  ("&N", ChatColor.UNDERLINE    ),
-		ITALIC      ("&O", ChatColor.ITALIC       ),
-		RESET       ("&R", ChatColor.RESET        );
-		
-		private final String    chatCode;
-		private final ChatColor gameCode;
-		
-		ColorMap(String chatCode, ChatColor gameCode) {
-			this.chatCode = chatCode;
-			this.gameCode = gameCode;
-		}
-	}
-
-	// Parse chat & codes into game ChatColor codes
-	//
-	// Makes two StringBuffers from message, one as passed in, the other uppercase
-	// to match against the game colour codes in the enum.
-	//
-	// This bit of code largely based on something very very similar from Drathus
+	private static final String timeFormat         = "h:mm:ss a z";
+	private static final String dateFormat         = "EEE, dd MMMMM yyyy";
+	private static final String yearlessDateFormat = "EEE, dd MMMMM";
 	
-	public static String mapToChatColors(String text) {
-		StringBuilder out      = new StringBuilder(text);
-		StringBuilder outUpper = new StringBuilder(text.toUpperCase());
-		
-		for (ColorMap c : ColorMap.values()) {
-		    int index = outUpper.indexOf(c.chatCode);
-		    while (index != -1) {
-		    	out     .replace(index, index + c.chatCode.length(), c.gameCode.toString());
-		    	outUpper.replace(index, index + c.chatCode.length(), c.gameCode.toString());
-		    	
-		        index += c.gameCode.toString().length();
-		        index = outUpper.indexOf(c.chatCode, index);
-		    }
-		}
-		
-		return out.toString();
-	}
-
 	public static String splitCamelCase(String text) {
 	   return text.replaceAll(
 	      String.format("%s|%s|%s",
@@ -99,5 +47,71 @@ public class StringUtils {
 	      ),
 	      " "
 	   );
+	}
+	
+	public static String join(List<String> list, String separator) {
+		StringBuilder result = new StringBuilder();
+		int x = 0;
+		
+		for (String text : list) {
+			if (++x > 1) result.append(separator);
+			result.append(text);
+		}
+		
+		return result.toString();
+	}
+	
+	public static String getFormattedDate(Date date) {
+		return StringUtils.getFormattedDate(date, null);
+	}
+	
+	public static String getFormattedDate(Date date, String boringPrefix) {
+		String format;
+		
+		// Turn the submitted date into a Calendar
+		Calendar submitted = Calendar.getInstance();
+		submitted.setTime(date);
+		
+		// Create Calendars for today and yesterday
+		Calendar today     = Calendar.getInstance();
+		Calendar yesterday = Calendar.getInstance();
+		yesterday.add(Calendar.DAY_OF_YEAR, -1);
+
+		// First see if the submitted date is today
+		
+		if ( (submitted.get(Calendar.YEAR) == today.get(Calendar.YEAR)) && (submitted.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) ) {
+			format = "'today'";
+			
+		} else if ( (submitted.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR)) && (submitted.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)) ) {
+			format = "'yesterday'";
+		
+		} else {
+			format = (boringPrefix != null ? "'" + boringPrefix +"' " : "");
+			
+			if (submitted.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
+				format += StringUtils.yearlessDateFormat;
+			} else {
+				format += StringUtils.dateFormat;
+			}
+		}
+		
+		// Tack on the time
+		format += " 'at' " + StringUtils.timeFormat;
+		
+		// Some debugging
+	    NyvariaCore.instance.log(Level.FINER, "getFormattedDate: boring prefix  = " + boringPrefix);
+	    NyvariaCore.instance.log(Level.FINER, "getFormattedDate: derived format = " + format);
+	    
+		// Create the formatter and return the string
+	    SimpleDateFormat sdf = new SimpleDateFormat(format);
+	    return sdf.format(date);
+	}
+	
+	public static String getFormattedDate(long epoch) {
+		return StringUtils.getFormattedDate(epoch, null);
+	}
+
+	public static String getFormattedDate(long epoch, String boringPrefix) {
+		return StringUtils.getFormattedDate(new Date(epoch), boringPrefix);
 	}
 }

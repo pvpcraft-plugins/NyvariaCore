@@ -21,11 +21,13 @@
  */
 package net.nyvaria.nyvariacore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -42,31 +44,64 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
 		this.plugin = plugin;
 	}
 
-    protected Player getTargetPlayer(CorePlayer corePlayer, String targetPlayerName) {
-    	return this.getTargetPlayer(corePlayer.player, targetPlayerName);
+    protected Player getOnlinePlayer(String partialName) {
+    	return this.getOnlinePlayer(partialName, (Player) null);
     }
     
-    protected Player getTargetPlayer(Player player, String targetPlayerName) {
-		List<Player> matchedPlayers = this.plugin.getServer().matchPlayer(targetPlayerName);
+    protected Player getOnlinePlayer(String partialName, CorePlayer corePlayer) {
+    	return this.getOnlinePlayer(partialName, corePlayer.player);
+    }
+    
+    protected Player getOnlinePlayer(String partialName, Player player) {
+		Player       matchedPlayer  = null;
+		List<Player> matchedPlayers = this.plugin.getServer().matchPlayer(partialName);
 		
 		if (matchedPlayers.size() > 1) {
-			player.sendMessage(ChatColor.WHITE + targetPlayerName + ChatColor.YELLOW + " matches more then one online player");
-			return null;
-			
+			if (player != null) {
+				player.sendMessage(ChatColor.WHITE + partialName + ChatColor.YELLOW + " matches more then one online player");
+			}
 		} else if (matchedPlayers.size() == 0) {
-			player.sendMessage(ChatColor.WHITE + targetPlayerName + ChatColor.YELLOW + " does not appear to be an online player");
-			return null;
+			if (player != null) {
+				player.sendMessage(ChatColor.WHITE + partialName + ChatColor.YELLOW + " does not appear to be an online player");
+			}
+		} else {
+			matchedPlayer = matchedPlayers.get(0);
 		}
     
-		return matchedPlayers.get(0);
+		return matchedPlayer;
     }
+    
+    protected List<OfflinePlayer> getOfflinePlayers(String partialName) {
+    	List<OfflinePlayer> matchedPlayers = new ArrayList<OfflinePlayer>();
 
-    
-    
+        for (OfflinePlayer offlinePlayer : this.plugin.getServer().getOfflinePlayers()) {
+            String offlinePlayerName = offlinePlayer.getName();
+
+            if (partialName.equalsIgnoreCase(offlinePlayerName)) {
+                // Exact match
+                matchedPlayers.clear();
+                matchedPlayers.add(offlinePlayer);
+                break;
+            }
+            
+            if (offlinePlayerName.toLowerCase().contains(partialName.toLowerCase())) {
+                // Partial match
+                matchedPlayers.add(offlinePlayer);
+            }
+        }
+
+        return matchedPlayers;
+    }
     
     protected static boolean isPlayer(CommandSender sender, String cmd) {
+    	return NyvariaCoreCommand.isPlayer(sender, cmd, true);
+    }
+    
+    protected static boolean isPlayer(CommandSender sender, String cmd, boolean sendAlert) {
     	if ( !(sender instanceof Player) ) {
-    		sender.sendMessage("You must be a player to use /" + cmd);
+    		if (sendAlert) {
+    			sender.sendMessage("You must be a player to use /" + cmd);
+    		}
     		return false;
     	}
     	

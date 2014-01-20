@@ -25,6 +25,7 @@ import java.util.logging.Level;
 
 import net.nyvaria.nyvariacore.commands.AfkCommand;
 import net.nyvaria.nyvariacore.commands.InvSeeCommand;
+import net.nyvaria.nyvariacore.commands.LastSeenCommand;
 import net.nyvaria.nyvariacore.commands.SudoCommand;
 import net.nyvaria.nyvariacore.commands.WhoCommand;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
@@ -46,6 +47,7 @@ public class NyvariaCore extends JavaPlugin {
 	public static String PERM_INVSEE                = "nyvcore.invsee";
 	public static String PERM_INVSEE_MODIFY         = "nyvcore.invsee.modify";
 	public static String PERM_INVSEE_MODIFY_PREVENT = "nyvcore.invsee.modify.prevent";
+	public static String PERM_LASTSEEN              = "nyvcore.lastseen";
 	public static String PERM_SUDO                  = "nyvcore.sudo";
 	public static String PERM_SUDO_PREVENT          = "nyvcore.sudo.prevent";
 	public static String PERM_WHO                   = "nyvcore.who";
@@ -60,10 +62,11 @@ public class NyvariaCore extends JavaPlugin {
 	public static ZPermissionsService zperms = null;
 	
 	// Commands
-	private AfkCommand     cmdAfk    = null;
-	private InvSeeCommand  cmdInvsee = null;
-	private SudoCommand    cmdSudo   = null;
-	private WhoCommand     cmdWho    = null;
+	private AfkCommand      cmdAfk      = null;
+	private InvSeeCommand   cmdInvsee   = null;
+	private LastSeenCommand cmdLastSeen = null;
+	private SudoCommand     cmdSudo     = null;
+	private WhoCommand      cmdWho      = null;
 
 	@Override
 	public void onEnable() {
@@ -98,18 +101,24 @@ public class NyvariaCore extends JavaPlugin {
             this.log("Skipping metrics");
 		}
 		
-		// Create and set the commands
-		this.cmdAfk    = new AfkCommand(this);
-		this.cmdInvsee = new InvSeeCommand(this);
-		this.cmdSudo   = new SudoCommand(this);
-		this.cmdWho    = new WhoCommand(this);
+		// Create the commands
+		this.cmdAfk      = new AfkCommand(this);
+		this.cmdInvsee   = new InvSeeCommand(this);
+		this.cmdLastSeen = new LastSeenCommand(this);
+		this.cmdSudo     = new SudoCommand(this);
+		this.cmdWho      = new WhoCommand(this);
 		
+		// Set the command executors
 		this.getCommand(AfkCommand.CMD).setExecutor(this.cmdAfk);
 		this.getCommand(InvSeeCommand.CMD).setExecutor(this.cmdInvsee);
-		this.getCommand(InvSeeCommand.CMD).setTabCompleter(this.cmdInvsee);
+		this.getCommand(LastSeenCommand.CMD).setExecutor(this.cmdLastSeen);
 		this.getCommand(SudoCommand.CMD).setExecutor(this.cmdSudo);
-		this.getCommand(SudoCommand.CMD).setTabCompleter(this.cmdSudo);
 		this.getCommand(WhoCommand.CMD).setExecutor(this.cmdWho);
+		
+		// Set the command tab completers
+		this.getCommand(InvSeeCommand.CMD).setTabCompleter(this.cmdInvsee);
+		this.getCommand(LastSeenCommand.CMD).setTabCompleter(this.cmdLastSeen);
+		this.getCommand(SudoCommand.CMD).setTabCompleter(this.cmdSudo);
 		this.getCommand(WhoCommand.CMD).setTabCompleter(this.cmdWho);
 		
 		// Print a lovely message
