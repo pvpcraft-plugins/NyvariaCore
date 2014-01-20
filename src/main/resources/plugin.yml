@@ -8,27 +8,36 @@ main: net.nyvaria.nyvariacore.NyvariaCore
 depend: [zPermissions]
 
 commands:
+  afk:
+    description: Set yourself as away from keyboard
+    permission: nyvcore.afk
+    permission-message: 'Unknown command. Type "help" for help..'
+    usage: /afk [message] - Set yourself as away from keyboard
+  
   invsee:
     description: Open another player's inventory
     permission: nyvcore.invsee
-    permission-message: 'Unknown command. Type "help" for help.'
+    permission-message: 'Unknown command. Type "help" for help..'
     usage: /invsee [player] - Open another player's inventory
   
   sudo:
     description: Run a command as someone else
     permission: nyvcore.sudo
-    permission-message: 'Unknown command. Type "help" for help.'
+    permission-message: 'Unknown command. Type "help" for help..'
     usage: Run a command as someone else
 
   who:
     description: List who is on the server
     aliases: list
     permission: nyvcore.who
-    permission-message: 'Unknown command. Type "help" for help.'
+    permission-message: 'Unknown command. Type "help" for help..'
     usage: List who is on the server
 
 permissions:
   # Base Permissions
+  nyvcore.afk:
+    description: Gives access to the /afk command
+  
   nyvcore.invsee:
     description: Gives access to the /invsee command
 
@@ -52,21 +61,22 @@ permissions:
   nyvcore.player:
     description: Gives player access to all NyvariaCore commands
     children:
+      nyvcore.afk: true
       nyvcore.who: true
       
   nyvcore.mod:
     description: Gives mod access to all NyvariaCore commands
     children:
+      nyvcore.afk:    true
       nyvcore.invsee: true
       nyvcore.who:    true
   
   nyvcore.admin:
     description: Gives admin level access to all NyvariaCore commands
     children:
-      nyvcore.invsee:                true
-      nyvcore.invsee.modify:         true
-      nyvcore.invsee.modify.prevent: true
-      nyvcore.sudo:                  true
-      nyvcore.sudo.prevent:          true
-      nyvcore.who:                   true
+      nyvcore.invsee:        true
+      nyvcore.invsee.modify: true
+      nyvcore.sudo:          true
+      nyvcore.sudo.prevent:  true
+      nyvcore.who:           true
       

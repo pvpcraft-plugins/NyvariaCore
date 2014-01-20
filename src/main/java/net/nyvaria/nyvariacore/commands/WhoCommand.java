@@ -92,13 +92,19 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 			
 			for (CorePlayer corePlayer : group.players) {
 				boolean playerIsVanished = corePlayer.isVanished();
+				boolean playerIsAfk      = corePlayer.isAfk();
 				
 				if (playerIsVanished && !canSeeVanished) {
 					--playerCount;
 				} else {
 					String playerName = group.prefix + corePlayer.player.getName() + group.suffix;
-					if (playerIsVanished) {
+					
+					if (playerIsVanished && playerIsAfk) {
+						playerName += ChatColor.AQUA + " /* afk-vanished */";
+					} else if (playerIsVanished) {
 						playerName += ChatColor.AQUA + " /* vanished */";
+					} else if (playerIsAfk) {
+						playerName += ChatColor.AQUA + " /* afk */";
 					}
 					
 					playerNames.add(playerName);

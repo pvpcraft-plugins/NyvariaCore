@@ -93,9 +93,12 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
 	    	return true;
 	    }
 	    
+	    // Get the other core player
+	    CorePlayer otherCorePlayer = this.plugin.corePlayerList.get(otherPlayer);
+	    
 	    // See if the other player has sudo prevent
 	    if (otherPlayer.hasPermission(NyvariaCore.PERM_SUDO_PREVENT)) {
-	    	corePlayer.sendMessage(ChatColor.YELLOW + "Sorry, but you cannot /" + SudoCommand.CMD + " as " + ChatColor.WHITE + otherPlayerName);
+	    	corePlayer.sendMessage(ChatColor.YELLOW + "Sorry, but you cannot /" + SudoCommand.CMD + " as " + otherCorePlayer.getPrettyName());
 	    	return true;
 	    }
 	    
@@ -112,7 +115,7 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
         final String sudoCmdAndArgs = sudoCmd + " " + getFinalArg(sudoCmdArgs, 0);
         
         // Inform the sender of what we are doing
-        sender.sendMessage(ChatColor.YELLOW + "Forcing " + ChatColor.WHITE + otherPlayer.getName() + ChatColor.YELLOW + " to run: " + ChatColor.WHITE + "/" + sudoCmdAndArgs);
+        sender.sendMessage(ChatColor.YELLOW + "Forcing " + otherCorePlayer.getPrettyName() + ChatColor.YELLOW + " to run: " + ChatColor.WHITE + "/" + sudoCmdAndArgs);
         
         // Run the command
     	this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable() {
@@ -124,20 +127,6 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
     		}
     	});
         
-        /*
-        final PluginCommand sudoPluginCmd = this.plugin.getServer().getPluginCommand(sudoCmd);
-        if (sudoPluginCmd != null) {
-        	this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable() {
-        		public void run() {
-        			plugin.log(Level.INFO, String.format("[Sudo] %s issued server command: /%s %s", otherPlayer.getName(), sudoCmd, getFinalArg(sudoCmdArgs, 0)));
-        			sudoPluginCmd.execute(otherPlayer, sudoCmd, sudoCmdArgs);
-        		}
-        	});
-        } else {
-        	sender.sendMessage(ChatColor.YELLOW + "Error calling command: " + ChatColor.WHITE + sudoCmd);
-        }
-        */
-		
 		return true;
 	}
 

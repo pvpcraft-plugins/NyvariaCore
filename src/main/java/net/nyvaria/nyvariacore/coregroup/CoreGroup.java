@@ -51,8 +51,8 @@ public class CoreGroup implements Comparable<CoreGroup> {
 		this.name        = name;
 		this.displayName = StringUtils.splitCamelCase(name);
 		this.priority    = CoreGroup.getGroupPriority(name);
-		this.prefix      = ChatColor.translateAlternateColorCodes('&', CoreGroup.getGroupPrefix(name));
-		this.suffix      = ChatColor.translateAlternateColorCodes('&', CoreGroup.getGroupSuffix(name));
+		this.prefix      = CoreGroup.getGroupPrefix(name);
+		this.suffix      = CoreGroup.getGroupSuffix(name);
 		this.players     = new CorePlayerList();
 		
 		this.plugin.log(Level.FINER, "Group name        = " + this.name);
@@ -93,11 +93,12 @@ public class CoreGroup implements Comparable<CoreGroup> {
 		return priority;
 	}
 	
-	private static String getGroupPrefix(String name) {
+	public static String getGroupPrefix(String name) {
 		String prefix = null;
 		
 		try {
 			prefix = NyvariaCore.zperms.getGroupMetadata(name, "prefix", String.class);
+			prefix = ChatColor.translateAlternateColorCodes('&', prefix);
 		} catch (Exception e) {
 		}
 		
@@ -108,11 +109,12 @@ public class CoreGroup implements Comparable<CoreGroup> {
 		return prefix;
 	}
 
-	private static String getGroupSuffix(String name) {
+	public static String getGroupSuffix(String name) {
 		String suffix = null;
 		
 		try {
 			suffix = NyvariaCore.zperms.getGroupMetadata(name, "suffix", String.class);
+			suffix = ChatColor.translateAlternateColorCodes('&', suffix);
 		} catch (Exception e) {
 		}
 		

@@ -22,8 +22,10 @@
 package net.nyvaria.nyvariacore.coreplayer;
 
 import net.nyvaria.nyvariacore.NyvariaCore;
+import net.nyvaria.nyvariacore.coregroup.CoreGroup;
 
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 /**
  * @author Paul Thompson
@@ -36,6 +38,7 @@ public class CorePlayer {
 	public CorePlayer(Player player) {
 		this.player = player;
 		this.invsee = false;
+		this.setAfk(false);
 	}
 	
 	public void sendMessage(String message) {
@@ -46,12 +49,29 @@ public class CorePlayer {
 		return this.player.hasPermission(permission);
 	}
 
+	public String getPrettyName() {
+		String group = this.getPrimaryGroup();
+		return CoreGroup.getGroupPrefix(group) + this.player.getName() + CoreGroup.getGroupSuffix(group);
+	}
+	
 	public String getPrimaryGroup() {
 		if (NyvariaCore.zperms != null) {
 			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.player.getName());
 		} else {
 			return "Players";
 		}
+	}
+	
+	public void setAfk(boolean afk) {
+        player.setMetadata("afk", new FixedMetadataValue(NyvariaCore.instance, afk));
+	}
+	
+	public boolean isAfk() {
+		if (player.hasMetadata("afk")) {
+			return player.getMetadata("afk").get(0).asBoolean();
+		}
+		
+		return false;
 	}
 	
 	public boolean isVanished() {

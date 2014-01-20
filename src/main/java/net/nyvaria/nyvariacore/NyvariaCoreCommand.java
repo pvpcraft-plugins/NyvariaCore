@@ -89,7 +89,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
     
     protected static boolean hasCommandPermission(Player player, String permission) {
         if (!player.hasPermission(permission)) {
-        	player.sendMessage("Unknown command. Type \"help\"for help..");
+        	player.sendMessage("Unknown command. Type \"help\"for help...");
         	return false;
         }
         
@@ -98,7 +98,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
     
     protected static boolean hasCommandPermission(ConsoleCommandSender console, String permission) {
         if (!console.hasPermission(permission)) {
-        	console.sendMessage("Unknown command. Type \"help\"for help.");
+        	console.sendMessage("Unknown command. Type \"help\"for help....");
         	return false;
         }
         

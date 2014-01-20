@@ -23,6 +23,7 @@ package net.nyvaria.nyvariacore;
 
 import java.util.logging.Level;
 
+import net.nyvaria.nyvariacore.commands.AfkCommand;
 import net.nyvaria.nyvariacore.commands.InvSeeCommand;
 import net.nyvaria.nyvariacore.commands.SudoCommand;
 import net.nyvaria.nyvariacore.commands.WhoCommand;
@@ -39,6 +40,9 @@ import org.tyrannyofheaven.bukkit.zPermissions.ZPermissionsService;
  *
  */
 public class NyvariaCore extends JavaPlugin {
+	public static NyvariaCore instance;
+	
+	public static String PERM_AFK                   = "nyvcore.afk";
 	public static String PERM_INVSEE                = "nyvcore.invsee";
 	public static String PERM_INVSEE_MODIFY         = "nyvcore.invsee.modify";
 	public static String PERM_INVSEE_MODIFY_PREVENT = "nyvcore.invsee.modify.prevent";
@@ -56,12 +60,16 @@ public class NyvariaCore extends JavaPlugin {
 	public static ZPermissionsService zperms = null;
 	
 	// Commands
-	private InvSeeCommand       cmdInvsee = null;
-	private SudoCommand         cmdSudo   = null;
-	private WhoCommand          cmdWho    = null;
+	private AfkCommand     cmdAfk    = null;
+	private InvSeeCommand  cmdInvsee = null;
+	private SudoCommand    cmdSudo   = null;
+	private WhoCommand     cmdWho    = null;
 
 	@Override
 	public void onEnable() {
+		// First set the instance
+		NyvariaCore.instance = this;
+
 		// Create an empty core player list
 		this.corePlayerList = new CorePlayerList();
 		
@@ -91,17 +99,19 @@ public class NyvariaCore extends JavaPlugin {
 		}
 		
 		// Create and set the commands
+		this.cmdAfk    = new AfkCommand(this);
 		this.cmdInvsee = new InvSeeCommand(this);
 		this.cmdSudo   = new SudoCommand(this);
 		this.cmdWho    = new WhoCommand(this);
 		
+		this.getCommand(AfkCommand.CMD).setExecutor(this.cmdAfk);
 		this.getCommand(InvSeeCommand.CMD).setExecutor(this.cmdInvsee);
 		this.getCommand(InvSeeCommand.CMD).setTabCompleter(this.cmdInvsee);
 		this.getCommand(SudoCommand.CMD).setExecutor(this.cmdSudo);
 		this.getCommand(SudoCommand.CMD).setTabCompleter(this.cmdSudo);
 		this.getCommand(WhoCommand.CMD).setExecutor(this.cmdWho);
 		this.getCommand(WhoCommand.CMD).setTabCompleter(this.cmdWho);
-
+		
 		// Print a lovely message
 		this.log("Enabling " + this.getNameVersion() + " successful");
 	}
@@ -117,6 +127,9 @@ public class NyvariaCore extends JavaPlugin {
 		
 		// Destroy the metrics handler
 		this.metrics = null;
+		
+		// And unset the instance
+		NyvariaCore.instance = null;
 		
 		// Print a lovely message
 		this.log("Disabling " + this.getNameVersion() + " successful");
