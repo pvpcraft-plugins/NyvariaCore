@@ -29,7 +29,7 @@ import net.nyvaria.nyvariacore.NyvariaCore;
 import org.mcstats.Metrics;
 
 /**
- * @author Paul Thompson <captbunzo@gmail.com>
+ * @author Paul Thompson
  *
  */
 public class MetricsHandler {

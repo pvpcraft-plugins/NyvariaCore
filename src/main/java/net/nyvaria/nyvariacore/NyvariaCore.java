@@ -61,8 +61,6 @@ public class NyvariaCore extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.getLogger().setLevel(Level.INFO);
-		
 		// Create an empty core player list
 		this.corePlayerList = new CorePlayerList();
 		
@@ -97,8 +95,11 @@ public class NyvariaCore extends JavaPlugin {
 		this.cmdWho    = new WhoCommand(this);
 		
 		this.getCommand(InvSeeCommand.CMD).setExecutor(this.cmdInvsee);
+		this.getCommand(InvSeeCommand.CMD).setTabCompleter(this.cmdInvsee);
 		this.getCommand(SudoCommand.CMD).setExecutor(this.cmdSudo);
+		this.getCommand(SudoCommand.CMD).setTabCompleter(this.cmdSudo);
 		this.getCommand(WhoCommand.CMD).setExecutor(this.cmdWho);
+		this.getCommand(WhoCommand.CMD).setTabCompleter(this.cmdWho);
 
 		// Print a lovely message
 		this.log("Enabling " + this.getNameVersion() + " successful");
@@ -110,12 +111,13 @@ public class NyvariaCore extends JavaPlugin {
 		this.corePlayerList.clear();
 		this.corePlayerList = null;
 		
-		// Unload zperms
+		// Unload zPermissions
 		NyvariaCore.zperms = null;
 		
 		// Destroy the metrics handler
 		this.metrics = null;
 		
+		// Print a lovely message
 		this.log("Disabling " + this.getNameVersion() + " successful");
 	}
 	
