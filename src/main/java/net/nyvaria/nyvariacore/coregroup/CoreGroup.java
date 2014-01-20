@@ -1,10 +1,29 @@
 /**
+ * Copyright (c) 2013-2014 -- Paul Thompson / Nyvaria
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
  * 
  */
 package net.nyvaria.nyvariacore.coregroup;
 
 import java.util.HashMap;
 import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
 
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
@@ -31,8 +50,8 @@ public class CoreGroup implements Comparable<CoreGroup> {
 		this.name        = name;
 		this.displayName = StringUtils.splitCamelCase(name);
 		this.priority    = CoreGroup.getGroupPriority(name);
-		this.prefix      = StringUtils.mapToChatColors(CoreGroup.getGroupPrefix(name));
-		this.suffix      = StringUtils.mapToChatColors(CoreGroup.getGroupSuffix(name));
+		this.prefix      = ChatColor.translateAlternateColorCodes('&', CoreGroup.getGroupPrefix(name));
+		this.suffix      = ChatColor.translateAlternateColorCodes('&', CoreGroup.getGroupSuffix(name));
 		this.players     = new CorePlayerList();
 		
 		this.plugin.log(Level.FINER, "Group name        = " + this.name);

@@ -1,1 +1,6 @@
-# Nothing here yet
+#
+# NyvariaCore Configuration
+#
+
+use-metrics: true
+

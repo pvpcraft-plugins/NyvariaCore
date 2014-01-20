@@ -1,4 +1,21 @@
 /**
+ * Copyright (c) 2013-2014 -- Paul Thompson / Nyvaria
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
  * 
  */
 package net.nyvaria.nyvariacore;
@@ -9,6 +26,7 @@ import net.nyvaria.nyvariacore.commands.InvSeeCommand;
 import net.nyvaria.nyvariacore.commands.SudoCommand;
 import net.nyvaria.nyvariacore.commands.WhoCommand;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
+import net.nyvaria.nyvariacore.metrics.MetricsHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,9 +45,10 @@ public class NyvariaCore extends JavaPlugin {
 	public static String PERM_SUDO_PREVENT          = "nyvcore.sudo.prevent";
 	public static String PERM_WHO                   = "nyvcore.who";
 	
-	// Core player list and listener
+	// Core player list and listener and metrics
 	public  CorePlayerList      corePlayerList = null;
 	private NyvariaCoreListener listener       = null;
+	private MetricsHandler      metrics        = null;
 	
 	// zPermissions API
 	public static ZPermissionsService zperms = null;
@@ -58,6 +77,19 @@ public class NyvariaCore extends JavaPlugin {
 			this.corePlayerList.put(player);
 		}
 
+		// Initialise or update the configuration
+		this.saveDefaultConfig();
+		this.getConfig().options().copyDefaults(true);
+		
+		// Initialise metrics
+		boolean useMetrics = this.getConfig().getBoolean("use-metrics");
+		if (useMetrics) {
+            this.metrics = new MetricsHandler(this);
+            metrics.run();
+		} else {
+            this.log("Skipping metrics");
+		}
+		
 		// Create and set the commands
 		this.cmdInvsee = new InvSeeCommand(this);
 		this.cmdSudo   = new SudoCommand(this);
@@ -67,6 +99,7 @@ public class NyvariaCore extends JavaPlugin {
 		this.getCommand(SudoCommand.CMD).setExecutor(this.cmdSudo);
 		this.getCommand(WhoCommand.CMD).setExecutor(this.cmdWho);
 
+		// Print a lovely message
 		this.log("Enabling " + this.getNameVersion() + " successful");
 	}
 	
@@ -79,30 +112,10 @@ public class NyvariaCore extends JavaPlugin {
 		// Unload zperms
 		NyvariaCore.zperms = null;
 		
+		// Destroy the metrics handler
+		this.metrics = null;
+		
 		this.log("Disabling " + this.getNameVersion() + " successful");
-	}
-	
-	public void reload() {
-		this.log("Reloading " + this.getNameVersion());
-		this.onDisable();
-		this.onEnable();
-		this.log("Reloading " + this.getNameVersion() + " successful");
-	}
-
-	private String getNameVersion() {
-		return this.getName() + " " + this.getVersion();
-	}
-	
-	private String getVersion() {
-		return "v" + this.getDescription().getVersion();
-	}
-	
-	public void log(String msg) {
-		this.log(Level.INFO, msg);
-	}
-	
-	public void log(Level level, String msg) {
-		this.getLogger().log(level, msg);
 	}
 	
 	// Private methods
@@ -121,5 +134,17 @@ public class NyvariaCore extends JavaPlugin {
 		}
 				
 		return (NyvariaCore.zperms != null);
+	}
+	
+	public void log(String msg) {
+		this.log(Level.INFO, msg);
+	}
+	
+	public void log(Level level, String msg) {
+		this.getLogger().log(level, msg);
+	}
+	
+	private String getNameVersion() {
+		return this.getName() + " v" + this.getDescription().getVersion();
 	}
 }

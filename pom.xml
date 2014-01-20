@@ -2,11 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>net.nyvaria</groupId>
 	<artifactId>NyvariaCore</artifactId>
-	<version>1.0.9</version>
+	<version>1.1.01</version>
+	
 	<name>NyvariaCore</name>
 	<url>https://github.com/nyvaria/NyvariaCore</url>
 	<description>General purpose Nyvaria plugin.</description>
@@ -58,6 +59,10 @@
 			<id>vault-repo</id>
 			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
 		</repository>
+		<repository>
+			<id>Plugin Metrics</id>
+			<url>http://repo.mcstats.org/content/repositories/public</url>
+		</repository>
 	</repositories>
 	
 	<dependencies>
@@ -72,6 +77,12 @@
 			<artifactId>zPermissions</artifactId>
 			<version>[0.9.8,)</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mcstats.bukkit</groupId>
+			<artifactId>metrics</artifactId>
+			<version>R7</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	

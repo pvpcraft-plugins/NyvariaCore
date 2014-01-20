@@ -18,38 +18,36 @@
 /**
  * 
  */
-package net.nyvaria.nyvariacore.coreplayer;
+package net.nyvaria.nyvariacore.metrics;
+
+import java.io.IOException;
+import java.util.logging.Level;
 
 import net.nyvaria.nyvariacore.NyvariaCore;
 
-import org.bukkit.entity.Player;
+import org.mcstats.Metrics;
 
 /**
- * @author Paul Thompson
+ * @author Paul Thompson <captbunzo@gmail.com>
  *
  */
-public class CorePlayer {
-	public final Player player;
-	public boolean invsee;
+public class MetricsHandler {
+    private static final String METRICS_URL = "http://mcstats.org/plugin/NyvariaCore";
+	private final NyvariaCore plugin;
 	
-	public CorePlayer(Player player) {
-		this.player = player;
-		this.invsee = false;
+	public MetricsHandler(NyvariaCore plugin) {
+		this.plugin = plugin;
 	}
 	
-	public void sendMessage(String message) {
-		this.player.sendMessage(message);
-	}
-	
-	public boolean hasPermission(String permission) {
-		return this.player.hasPermission(permission);
-	}
-
-	public String getPrimaryGroup() {
-		if (NyvariaCore.zperms != null) {
-			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.player.getName());
-		} else {
-			return "Players";
+	public void run() {
+		try {
+			Metrics metrics = new Metrics(plugin);
+			metrics.start();
+			this.plugin.log("Metrics started: " + METRICS_URL);
+		} catch (IOException e) {
+			this.plugin.log(Level.WARNING, "Failed to start metrics");
+			e.printStackTrace();
 		}
 	}
+
 }
