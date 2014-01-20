@@ -45,6 +45,7 @@ public class NyvariaCore extends JavaPlugin {
 	public static String PERM_SUDO                  = "nyvcore.sudo";
 	public static String PERM_SUDO_PREVENT          = "nyvcore.sudo.prevent";
 	public static String PERM_WHO                   = "nyvcore.who";
+	public static String PERM_SEE_VANISHED          = "vanish.see";
 	
 	// Core player list and listener and metrics
 	public  CorePlayerList      corePlayerList = null;

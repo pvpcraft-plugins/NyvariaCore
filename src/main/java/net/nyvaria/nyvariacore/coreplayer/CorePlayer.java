@@ -53,4 +53,12 @@ public class CorePlayer {
 			return "Players";
 		}
 	}
+	
+	public boolean isVanished() {
+		if (player.hasMetadata("vanished")) {
+			return player.getMetadata("vanished").get(0).asBoolean();
+		}
+		
+		return false;
+	}
 }

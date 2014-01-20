@@ -72,6 +72,9 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 	    	return true;
 	    }
 		
+		// Find out if the sender can see vanished players
+		boolean canSeeVanished = sender.hasPermission(NyvariaCore.PERM_SEE_VANISHED);
+		
 		// Initialise the message we will be displaying
 		StringBuilder message = new StringBuilder();
 		
@@ -79,29 +82,48 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 		int playerCount = this.plugin.getServer().getOnlinePlayers().length;
 		int playerMax   = this.plugin.getServer().getMaxPlayers();
 		
-		// Put together the player count string
-		message.append(String.format(ChatColor.YELLOW + "There are %d/%d players online:" + ChatColor.WHITE, playerCount, playerMax));
-		
 		// Get a sorted list of the player groups (with their players)
 		List<CoreGroup> groupList = new CoreGroupList(this.plugin).getSortedList();
 		
 		// Iterate through them adding each group to the message
 		for (CoreGroup group : groupList) {
+			ArrayList<String> playerNames = new ArrayList<String>();
 			StringBuilder groupMessage = new StringBuilder();
 			
-			int groupPlayerCount = group.players.length();
-			int groupPlayerNum   = 0;
-			
 			for (CorePlayer corePlayer : group.players) {
-				groupMessage.append(group.prefix + corePlayer.player.getName() + group.suffix);
+				boolean playerIsVanished = corePlayer.isVanished();
 				
-				if ( ++groupPlayerNum < groupPlayerCount ) {
-					groupMessage.append(ChatColor.GRAY + ", ");
+				if (playerIsVanished && !canSeeVanished) {
+					--playerCount;
+				} else {
+					String playerName = group.prefix + corePlayer.player.getName() + group.suffix;
+					if (playerIsVanished) {
+						playerName += ChatColor.AQUA + " /* vanished */";
+					}
+					
+					playerNames.add(playerName);
 				}
 			}
 			
-			message.append(String.format(ChatColor.GRAY + "" + ChatColor.ITALIC + "\n%s: %s" + group.suffix, group.displayName, groupMessage.toString()));
+			int groupPlayerNameCount = playerNames.size();
+			int groupPlayerNameNum   = 0;
+			
+			if (playerNames.size() > 0) {
+				for (String playerName : playerNames) {
+					++groupPlayerNameNum;
+	
+					groupMessage.append(playerName);
+					if ( groupPlayerNameNum < groupPlayerNameCount ) {
+						groupMessage.append(ChatColor.GRAY + ", ");
+					}
+				}
+				
+				message.append(String.format(ChatColor.GRAY + "" + ChatColor.ITALIC + "\n%s: %s" + group.suffix, group.displayName, groupMessage.toString()));
+			}
 		}
+		
+		// Put together the player count string
+		message.insert(0, String.format(ChatColor.YELLOW + "There are %d/%d players online:" + ChatColor.WHITE, playerCount, playerMax));
 		
 		// And send it to the sender
 		sender.sendMessage(message.toString());
