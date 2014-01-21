@@ -67,7 +67,7 @@ public class LastSeenCommand extends NyvariaCoreCommand implements CommandExecut
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// If we are a player, check the command permission
-		if ( (sender instanceof Player) && !NyvariaCoreCommand.hasCommandPermission(sender, NyvariaCore.PERM_INVSEE) ) {
+		if ( (sender instanceof Player) && !NyvariaCoreCommand.hasCommandPermission(sender, NyvariaCore.PERM_LASTSEEN) ) {
 	    	return true;
 		}
 		
