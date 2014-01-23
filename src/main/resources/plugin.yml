@@ -14,6 +14,12 @@ commands:
     permission-message: 'Unknown command. Type "help" for help..'
     usage: /afk [message] - Set yourself as away from keyboard
   
+  feed:
+    description: Feed another player
+    permission: nyvcore.feed
+    permission-message: 'Unknown command. Type "help" for help..'
+    usage: /feed [player] - Feed another player
+  
   invsee:
     description: Open another player's inventory
     permission: nyvcore.invsee
@@ -43,6 +49,9 @@ permissions:
   # Base Permissions
   nyvcore.afk:
     description: Gives access to the /afk command
+  
+  nyvcore.feed:
+    description: Gives access to the /feed command
   
   nyvcore.invsee:
     description: Gives access to the /invsee command
@@ -85,6 +94,7 @@ permissions:
   nyvcore.admin:
     description: Gives admin level access to all NyvariaCore commands
     children:
+      nyvcore.feed:          true
       nyvcore.invsee:        true
       nyvcore.invsee.modify: true
       nyvcore.lastseen:      true

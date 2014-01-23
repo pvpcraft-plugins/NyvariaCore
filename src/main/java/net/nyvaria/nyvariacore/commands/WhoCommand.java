@@ -27,7 +27,8 @@ import java.util.List;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.NyvariaCoreCommand;
 import net.nyvaria.nyvariacore.coregroup.CoreGroup;
-import net.nyvaria.nyvariacore.coregroup.CoreGroupList;
+import net.nyvaria.nyvariacore.coregroup.CoreGroupLabel;
+import net.nyvaria.nyvariacore.coregroup.CoreGroupLabelList;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 
 import org.bukkit.ChatColor;
@@ -82,32 +83,34 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 		int playerCount = this.plugin.getServer().getOnlinePlayers().length;
 		int playerMax   = this.plugin.getServer().getMaxPlayers();
 		
-		// Get a sorted list of the player groups (with their players)
-		List<CoreGroup> groupList = new CoreGroupList(this.plugin).getSortedList();
+		// Get a sorted list of the player group labels (with their players)
+		List<CoreGroupLabel> labelList = new CoreGroupLabelList(this.plugin).getSortedList();
 		
-		// Iterate through them adding each group to the message
-		for (CoreGroup group : groupList) {
+		// Iterate through them adding each group label to the message
+		for (CoreGroupLabel coreGroupLabel : labelList) {
 			ArrayList<String> playerNames = new ArrayList<String>();
 			StringBuilder groupMessage = new StringBuilder();
 			
-			for (CorePlayer corePlayer : group.players) {
-				boolean playerIsVanished = corePlayer.isVanished();
-				boolean playerIsAfk      = corePlayer.isAfk();
-				
-				if (playerIsVanished && !canSeeVanished) {
-					--playerCount;
-				} else {
-					String playerName = group.prefix + corePlayer.player.getName() + group.suffix;
+			for (CoreGroup coreGroup : coreGroupLabel.getGroups()) {
+				for (CorePlayer corePlayer : coreGroup.players) {
+					boolean playerIsVanished = corePlayer.isVanished();
+					boolean playerIsAfk      = corePlayer.isAfk();
 					
-					if (playerIsVanished && playerIsAfk) {
-						playerName += ChatColor.AQUA + " /* afk-vanished */";
-					} else if (playerIsVanished) {
-						playerName += ChatColor.AQUA + " /* vanished */";
-					} else if (playerIsAfk) {
-						playerName += ChatColor.AQUA + " /* afk */";
+					if (playerIsVanished && !canSeeVanished) {
+						--playerCount;
+					} else {
+						String playerName = coreGroup.prefix + corePlayer.player.getName() + coreGroup.suffix;
+						
+						if (playerIsVanished && playerIsAfk) {
+							playerName += ChatColor.AQUA + " /* afk-vanished */";
+						} else if (playerIsVanished) {
+							playerName += ChatColor.AQUA + " /* vanished */";
+						} else if (playerIsAfk) {
+							playerName += ChatColor.AQUA + " /* afk */";
+						}
+						
+						playerNames.add(playerName);
 					}
-					
-					playerNames.add(playerName);
 				}
 			}
 			
@@ -124,7 +127,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 					}
 				}
 				
-				message.append(String.format(ChatColor.GRAY + "" + ChatColor.ITALIC + "\n%s: %s" + group.suffix, group.displayName, groupMessage.toString()));
+				message.append(String.format(ChatColor.GRAY + "" + ChatColor.ITALIC + "\n%s: %s", coreGroupLabel.name, groupMessage.toString()));
 			}
 		}
 		

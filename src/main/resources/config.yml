@@ -4,3 +4,16 @@
 
 use-metrics: true
 
+group-labels:
+  Admins:
+    - ServerOwners
+    - SeniorAdmins
+    - AssociateAdmins
+    - JuniorAdmins
+  Moderators:
+    - SeniorMods
+    - JuniorMods
+  Nyvarians:
+    - Nyvarians
+  Newbies:
+    - Newbies

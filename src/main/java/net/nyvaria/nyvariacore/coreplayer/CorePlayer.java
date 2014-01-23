@@ -32,7 +32,7 @@ import org.bukkit.metadata.FixedMetadataValue;
  * @author Paul Thompson
  *
  */
-public class CorePlayer {
+public class CorePlayer implements Comparable<CorePlayer> {
 	public final OfflinePlayer offlinePlayer;
 	public final Player        player;
 	public boolean             invsee;
@@ -63,15 +63,19 @@ public class CorePlayer {
 		}
 		return false;
 	}
-
+	
+	public String getName() {
+		return offlinePlayer.getName();
+	}
+	
 	public String getPrettyName() {
 		String group = this.getPrimaryGroup();
-		return CoreGroup.getGroupPrefix(group) + this.offlinePlayer.getName() + CoreGroup.getGroupSuffix(group);
+		return CoreGroup.getGroupPrefix(group) + this.getName() + CoreGroup.getGroupSuffix(group);
 	}
 	
 	public String getPrimaryGroup() {
 		if (NyvariaCore.zperms != null) {
-			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.offlinePlayer.getName());
+			return NyvariaCore.zperms.getPlayerPrimaryGroup(this.getName());
 		} else {
 			return "Players";
 		}
@@ -95,5 +99,9 @@ public class CorePlayer {
 			return player.getMetadata("vanished").get(0).asBoolean();
 		}
 		return false;
+	}
+
+	public int compareTo(CorePlayer other) {
+		return this.getName().compareTo(other.getName());
 	}
 }

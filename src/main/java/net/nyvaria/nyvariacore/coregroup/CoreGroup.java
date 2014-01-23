@@ -35,8 +35,6 @@ import net.nyvaria.utils.StringUtils;
  *
  */
 public class CoreGroup implements Comparable<CoreGroup> {
-	private final NyvariaCore plugin;
-	
 	public String   name;
 	public String   displayName;
 	public Integer  priority;
@@ -45,9 +43,7 @@ public class CoreGroup implements Comparable<CoreGroup> {
 	
 	public CorePlayerList players;
 	
-	public CoreGroup(String name, NyvariaCore plugin) {
-		this.plugin = plugin;
-		
+	public CoreGroup(String name) {
 		this.name        = name;
 		this.displayName = StringUtils.splitCamelCase(name);
 		this.priority    = CoreGroup.getGroupPriority(name);
@@ -55,15 +51,15 @@ public class CoreGroup implements Comparable<CoreGroup> {
 		this.suffix      = CoreGroup.getGroupSuffix(name);
 		this.players     = new CorePlayerList();
 		
-		this.plugin.log(Level.FINER, "Group name        = " + this.name);
-		this.plugin.log(Level.FINER, "Group displayName = " + this.displayName);
-		this.plugin.log(Level.FINER, "Group priority    = " + this.priority);
-		this.plugin.log(Level.FINER, "Group prefix      = " + this.prefix);
-		this.plugin.log(Level.FINER, "Group suffix      = " + this.suffix);
+		NyvariaCore.instance.log(Level.FINER, "Group name        = " + this.name);
+		NyvariaCore.instance.log(Level.FINER, "Group displayName = " + this.displayName);
+		NyvariaCore.instance.log(Level.FINER, "Group priority    = " + this.priority);
+		NyvariaCore.instance.log(Level.FINER, "Group prefix      = " + this.prefix);
+		NyvariaCore.instance.log(Level.FINER, "Group suffix      = " + this.suffix);
 	}
 
 	public int compareTo(CoreGroup other) {
-		return this.priority.compareTo(other.priority);
+		return other.priority.compareTo(this.priority);
 	}
 	
 	private static final HashMap<String, Integer> GROUP_PRIORITIES = new HashMap<String, Integer>();
@@ -124,5 +120,4 @@ public class CoreGroup implements Comparable<CoreGroup> {
 		
 		return suffix;
 	}
-
 }

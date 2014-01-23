@@ -24,6 +24,7 @@ package net.nyvaria.nyvariacore;
 import java.util.logging.Level;
 
 import net.nyvaria.nyvariacore.commands.AfkCommand;
+import net.nyvaria.nyvariacore.commands.FeedCommand;
 import net.nyvaria.nyvariacore.commands.InvSeeCommand;
 import net.nyvaria.nyvariacore.commands.LastSeenCommand;
 import net.nyvaria.nyvariacore.commands.SudoCommand;
@@ -44,6 +45,7 @@ public class NyvariaCore extends JavaPlugin {
 	public static NyvariaCore instance;
 	
 	public static String PERM_AFK                   = "nyvcore.afk";
+	public static String PERM_FEED                  = "nyvcore.feed";
 	public static String PERM_INVSEE                = "nyvcore.invsee";
 	public static String PERM_INVSEE_MODIFY         = "nyvcore.invsee.modify";
 	public static String PERM_INVSEE_MODIFY_PREVENT = "nyvcore.invsee.modify.prevent";
@@ -54,15 +56,16 @@ public class NyvariaCore extends JavaPlugin {
 	public static String PERM_SEE_VANISHED          = "vanish.see";
 	
 	// Core player list and listener and metrics
-	public  CorePlayerList      corePlayerList = null;
-	private NyvariaCoreListener listener       = null;
-	private MetricsHandler      metrics        = null;
+	public  CorePlayerList      corePlayerList     = null;
+	private NyvariaCoreListener listener           = null;
+	private MetricsHandler      metrics            = null;
 	
 	// zPermissions API
 	public static ZPermissionsService zperms = null;
 	
 	// Commands
 	private AfkCommand      cmdAfk      = null;
+	private FeedCommand     cmdFeed     = null;
 	private InvSeeCommand   cmdInvsee   = null;
 	private LastSeenCommand cmdLastSeen = null;
 	private SudoCommand     cmdSudo     = null;
@@ -72,7 +75,11 @@ public class NyvariaCore extends JavaPlugin {
 	public void onEnable() {
 		// First set the instance
 		NyvariaCore.instance = this;
-
+		
+		// Initialise or update the configuration
+		this.saveDefaultConfig();
+		this.getConfig().options().copyDefaults(true);
+		
 		// Create an empty core player list
 		this.corePlayerList = new CorePlayerList();
 		
@@ -88,10 +95,6 @@ public class NyvariaCore extends JavaPlugin {
 			this.corePlayerList.put(player);
 		}
 
-		// Initialise or update the configuration
-		this.saveDefaultConfig();
-		this.getConfig().options().copyDefaults(true);
-		
 		// Initialise metrics
 		boolean useMetrics = this.getConfig().getBoolean("use-metrics");
 		if (useMetrics) {
@@ -103,6 +106,7 @@ public class NyvariaCore extends JavaPlugin {
 		
 		// Create the commands
 		this.cmdAfk      = new AfkCommand(this);
+		this.cmdFeed     = new FeedCommand(this);
 		this.cmdInvsee   = new InvSeeCommand(this);
 		this.cmdLastSeen = new LastSeenCommand(this);
 		this.cmdSudo     = new SudoCommand(this);
@@ -110,12 +114,14 @@ public class NyvariaCore extends JavaPlugin {
 		
 		// Set the command executors
 		this.getCommand(AfkCommand.CMD).setExecutor(this.cmdAfk);
+		this.getCommand(FeedCommand.CMD).setExecutor(this.cmdFeed);
 		this.getCommand(InvSeeCommand.CMD).setExecutor(this.cmdInvsee);
 		this.getCommand(LastSeenCommand.CMD).setExecutor(this.cmdLastSeen);
 		this.getCommand(SudoCommand.CMD).setExecutor(this.cmdSudo);
 		this.getCommand(WhoCommand.CMD).setExecutor(this.cmdWho);
 		
 		// Set the command tab completers
+		this.getCommand(FeedCommand.CMD).setTabCompleter(this.cmdFeed);
 		this.getCommand(InvSeeCommand.CMD).setTabCompleter(this.cmdInvsee);
 		this.getCommand(LastSeenCommand.CMD).setTabCompleter(this.cmdLastSeen);
 		this.getCommand(SudoCommand.CMD).setTabCompleter(this.cmdSudo);
@@ -144,7 +150,6 @@ public class NyvariaCore extends JavaPlugin {
 		this.log("Disabling " + this.getNameVersion() + " successful");
 	}
 	
-	// Private methods
 	private boolean loadZPermissionsService() {
 		NyvariaCore.zperms = null;
 		

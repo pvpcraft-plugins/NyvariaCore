@@ -21,8 +21,10 @@
  */
 package net.nyvaria.nyvariacore.coreplayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
@@ -91,5 +93,15 @@ public class CorePlayerList implements Iterable<CorePlayer> {
 	
 	public int length() {
 		return this.map.size();
+	}
+	
+	public List<CorePlayer> values() {
+		List<CorePlayer> corePlayerList = new ArrayList<CorePlayer>();
+		
+		for (CorePlayer corePlayer : this.map.values()) {
+			corePlayerList.add(corePlayer);
+		}
+		
+		return corePlayerList;
 	}
 }

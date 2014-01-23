@@ -55,6 +55,12 @@ public class AfkCommand extends NyvariaCoreCommand implements CommandExecutor {
 	    	return true;
 	    }
 		
+		// Check if the player is vanished
+		if (corePlayer.isVanished()) {
+			corePlayer.sendMessage(ChatColor.YELLOW + "You cannot use /" + AfkCommand.CMD + " while " + ChatColor.AQUA + "vanished");
+			return true;
+		}
+		
 		// Initialise the message
 		StringBuilder message = new StringBuilder();
 		
