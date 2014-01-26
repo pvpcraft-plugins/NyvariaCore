@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import net.nyvaria.nyvariacore.NyvariaCore;
 
 /**
- * @author Paul Thompson, Drathus
+ * @author Paul Thompson
  *
  */
 public class StringUtils {
@@ -49,13 +49,23 @@ public class StringUtils {
 	   );
 	}
 	
-	public static String join(List<String> list, String separator) {
+	public static String join(List<Object> list) {
+		StringBuilder result = new StringBuilder();
+		
+		for (Object object : list) {
+			result.append(object);
+		}
+		
+		return result.toString();
+	}
+	
+	public static String join(List<Object> list, String separator) {
 		StringBuilder result = new StringBuilder();
 		int x = 0;
 		
-		for (String text : list) {
+		for (Object object : list) {
 			if (++x > 1) result.append(separator);
-			result.append(text);
+			result.append(object);
 		}
 		
 		return result.toString();
