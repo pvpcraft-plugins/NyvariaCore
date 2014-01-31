@@ -49,7 +49,7 @@ public class StringUtils {
 	   );
 	}
 	
-	public static String join(List<Object> list) {
+	public static String join(List<String> list) {
 		StringBuilder result = new StringBuilder();
 		
 		for (Object object : list) {
@@ -59,7 +59,7 @@ public class StringUtils {
 		return result.toString();
 	}
 	
-	public static String join(List<Object> list, String separator) {
+	public static String join(List<String> list, String separator) {
 		StringBuilder result = new StringBuilder();
 		int x = 0;
 		
