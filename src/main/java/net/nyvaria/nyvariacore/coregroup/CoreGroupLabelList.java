@@ -31,47 +31,44 @@ import java.util.*;
  * @author Paul Thompson
  */
 public class CoreGroupLabelList {
-    private final NyvariaCore plugin;
     private HashMap<String, CoreGroupLabel> labelMap;
-    private HashMap<String, String> groupMap;
 
     public static final String DEFAULT_GROUP_LABEL = "PLAYERS";
 
-    public CoreGroupLabelList(NyvariaCore plugin) {
-        this.plugin = plugin;
-        this.labelMap = new HashMap<String, CoreGroupLabel>();
-        this.groupMap = new HashMap<String, String>();
+    public CoreGroupLabelList() {
+        HashMap<String, String> groupMap = new HashMap<String, String>();
+        labelMap = new HashMap<String, CoreGroupLabel>();
 
-        ConfigurationSection labelsConfig = this.plugin.getConfig().getConfigurationSection("group-labels");
+        ConfigurationSection labelsConfig = NyvariaCore.getInstance().getConfig().getConfigurationSection("group-labels");
         Set<String> labels = labelsConfig.getKeys(false);
         labels.add(CoreGroupLabelList.DEFAULT_GROUP_LABEL);
 
         int order = 0;
         for (String label : labels) {
             List<String> groups = labelsConfig.getStringList(label);
-            this.labelMap.put(label, new CoreGroupLabel(label, ++order, groups));
+            labelMap.put(label, new CoreGroupLabel(label, ++order, groups));
 
             for (String group : groups) {
-                this.groupMap.put(group, label);
+                groupMap.put(group, label);
             }
         }
 
-        for (CorePlayer corePlayer : this.plugin.getCorePlayerList()) {
-            String groupName = corePlayer.getPrimaryGroup();
+        for (CorePlayer corePlayer : NyvariaCore.getInstance().getCorePlayerList()) {
+            CoreGroup group = corePlayer.getPrimaryGroup();
             String groupLabel;
 
-            if (this.groupMap.containsKey(groupName)) {
-                groupLabel = this.groupMap.get(groupName);
+            if (groupMap.containsKey(group.getName())) {
+                groupLabel = groupMap.get(group.getName());
             } else {
                 groupLabel = CoreGroupLabelList.DEFAULT_GROUP_LABEL;
             }
 
-            this.labelMap.get(groupLabel).add(corePlayer, groupName);
+            labelMap.get(groupLabel).add(corePlayer, group.getName());
         }
     }
 
     public List<CoreGroupLabel> getSortedList() {
-        List<CoreGroupLabel> list = new ArrayList<CoreGroupLabel>(this.labelMap.values());
+        List<CoreGroupLabel> list = new ArrayList<CoreGroupLabel>(labelMap.values());
         Collections.sort(list);
         return list;
     }

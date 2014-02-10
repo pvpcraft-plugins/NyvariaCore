@@ -80,7 +80,7 @@ public class LastSeenCommand extends NyvariaCoreCommand implements CommandExecut
 
         if (lastSeenPlayer != null) {
             CorePlayer onlineCorePlayer = this.plugin.getCorePlayerList().get(lastSeenPlayer);
-            sender.sendMessage(onlineCorePlayer.getPrettyName() + ChatColor.YELLOW + " can be seen online right now!");
+            sender.sendMessage(onlineCorePlayer.getWrappedName() + ChatColor.YELLOW + " can be seen online right now!");
             return true;
         }
 
@@ -93,9 +93,9 @@ public class LastSeenCommand extends NyvariaCoreCommand implements CommandExecut
 
         if (offlinePlayerList.size() == 1) {
             CorePlayer offlineCorePlayer = new CorePlayer(offlinePlayerList.get(0));
-            String lastSeenDateString = StringUtils.getFormattedDate(offlineCorePlayer.offlinePlayer.getLastPlayed(), "on");
+            String lastSeenDateString = StringUtils.getFormattedDate(offlineCorePlayer.getOfflinePlayer().getLastPlayed(), "on");
 
-            sender.sendMessage(offlineCorePlayer.getPrettyName() + ChatColor.YELLOW + " was last seen " + lastSeenDateString);
+            sender.sendMessage(offlineCorePlayer.getWrappedName() + ChatColor.YELLOW + " was last seen " + lastSeenDateString);
             return true;
         }
 
@@ -103,7 +103,7 @@ public class LastSeenCommand extends NyvariaCoreCommand implements CommandExecut
             List<String> playerNameList = new ArrayList<String>();
 
             for (OfflinePlayer offlinePlayer : offlinePlayerList) {
-                playerNameList.add(new CorePlayer(offlinePlayer).getPrettyName());
+                playerNameList.add(new CorePlayer(offlinePlayer).getWrappedName());
             }
 
             sender.sendMessage(ChatColor.GRAY + lastSeenPlayerName + ChatColor.YELLOW + " matched " + offlinePlayerList.size() + " players: " + StringUtils.join(playerNameList, ChatColor.WHITE + ", "));

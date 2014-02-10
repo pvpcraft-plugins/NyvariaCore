@@ -36,8 +36,6 @@ import java.util.logging.Level;
  * @author Paul Thompson
  */
 public class NyvariaCore extends NyvariaPlugin {
-    public static NyvariaCore instance;
-
     public static String PERM_AFK                   = "nyvcore.afk";
     public static String PERM_FEED                  = "nyvcore.feed";
     public static String PERM_INVSEE                = "nyvcore.invsee";
@@ -63,15 +61,6 @@ public class NyvariaCore extends NyvariaPlugin {
     private LastSeenCommand cmdLastSeen = null;
     private SudoCommand     cmdSudo     = null;
     private WhoCommand      cmdWho      = null;
-
-    /**
-     * Get the instance of the OpenAnalytics plugin from Bukkit.
-     *
-     * @return OpenAnalytics
-     */
-    public static NyvariaCore getInstance() {
-        return JavaPlugin.getPlugin(NyvariaCore.class);
-    }
 
     @Override
     public void onEnable() {
@@ -136,6 +125,15 @@ public class NyvariaCore extends NyvariaPlugin {
         this.log("Disabling %s successful", this.getNameAndVersion());
     }
 
+    /**
+     * Get the instance of the OpenAnalytics plugin from Bukkit.
+     *
+     * @return OpenAnalytics
+     */
+    public static NyvariaCore getInstance() {
+        return JavaPlugin.getPlugin(NyvariaCore.class);
+    }
+
     private boolean loadZPermissionsService() {
         NyvariaCore.zperms = null;
 
@@ -146,7 +144,7 @@ public class NyvariaCore extends NyvariaPlugin {
             NyvariaCore.zperms = null;
         } finally {
             if (NyvariaCore.zperms == null) {
-                this.log(Level.WARNING, "ZPermissionsService instance unexepectedly null after loading - zPerms support disabled!");
+                this.log(Level.WARNING, "ZPermissionsService instance unexpectedly null after loading - zPerms support disabled!");
             }
         }
 

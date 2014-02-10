@@ -92,8 +92,8 @@ public class FeedCommand extends NyvariaCoreCommand implements CommandExecutor, 
         hungryPlayer.setFoodLevel(20);
 
         // And notify everyone
-        sender.sendMessage(ChatColor.YELLOW + "You have fed " + hungryCorePlayer.getPrettyName());
-        hungryPlayer.sendMessage(ChatColor.YELLOW + "You have been fed by " + corePlayer.getPrettyName());
+        sender.sendMessage(ChatColor.YELLOW + "You have fed " + hungryCorePlayer.getWrappedName());
+        hungryPlayer.sendMessage(ChatColor.YELLOW + "You have been fed by " + corePlayer.getWrappedName());
 
         // Return a happy result
         return true;

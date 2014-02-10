@@ -97,7 +97,7 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
 
         // See if the other player has sudo prevent
         if (otherPlayer.hasPermission(NyvariaCore.PERM_SUDO_PREVENT)) {
-            corePlayer.sendMessage(ChatColor.YELLOW + "Sorry, but you cannot /" + SudoCommand.CMD + " as " + otherCorePlayer.getPrettyName());
+            corePlayer.sendMessage(ChatColor.YELLOW + "Sorry, but you cannot /" + SudoCommand.CMD + " as " + otherCorePlayer.getWrappedName());
             return true;
         }
 
@@ -114,13 +114,13 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
         final String sudoCmdAndArgs = sudoCmd + " " + getFinalArg(sudoCmdArgs, 0);
 
         // Inform the sender of what we are doing
-        sender.sendMessage(ChatColor.YELLOW + "Forcing " + otherCorePlayer.getPrettyName() + ChatColor.YELLOW + " to run: " + ChatColor.WHITE + "/" + sudoCmdAndArgs);
+        sender.sendMessage(ChatColor.YELLOW + "Forcing " + otherCorePlayer.getWrappedName() + ChatColor.YELLOW + " to run: " + ChatColor.WHITE + "/" + sudoCmdAndArgs);
 
         // Run the command
         this.plugin.getServer().getScheduler().runTask(this.plugin, new Runnable() {
             public void run() {
                 plugin.log(Level.INFO, String.format("[Sudo] %s issued server command: /%s", otherPlayer.getName(), sudoCmdAndArgs));
-                if (!otherPlayer.performCommand(sudoCmdAndArgs) && corePlayer.player.isOnline()) {
+                if (!otherPlayer.performCommand(sudoCmdAndArgs) && corePlayer.getPlayer().isOnline()) {
                     corePlayer.sendMessage(ChatColor.YELLOW + "Error calling command: " + ChatColor.WHITE + "/" + sudoCmd);
                 }
             }

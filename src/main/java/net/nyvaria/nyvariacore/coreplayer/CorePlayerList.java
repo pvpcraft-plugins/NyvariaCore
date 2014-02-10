@@ -49,8 +49,8 @@ public class CorePlayerList implements Iterable<CorePlayer> {
     }
 
     public void put(CorePlayer corePlayer) {
-        if (!this.map.containsKey(corePlayer.player)) {
-            this.map.put(corePlayer.player, corePlayer);
+        if (!this.map.containsKey(corePlayer.getPlayer())) {
+            this.map.put(corePlayer.getPlayer(), corePlayer);
         }
     }
 

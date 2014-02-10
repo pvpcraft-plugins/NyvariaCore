@@ -47,7 +47,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
     }
 
     protected Player getOnlinePlayer(String partialName, CorePlayer corePlayer) {
-        return this.getOnlinePlayer(partialName, corePlayer.player);
+        return this.getOnlinePlayer(partialName, corePlayer.getPlayer());
     }
 
     protected Player getOnlinePlayer(String partialName, Player player) {
@@ -117,7 +117,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
     }
 
     protected static boolean hasCommandPermission(CorePlayer corePlayer, String permission) {
-        return NyvariaCoreCommand.hasCommandPermission(corePlayer.player, permission);
+        return NyvariaCoreCommand.hasCommandPermission(corePlayer.getPlayer(), permission);
     }
 
     protected static boolean hasCommandPermission(Player player, String permission) {

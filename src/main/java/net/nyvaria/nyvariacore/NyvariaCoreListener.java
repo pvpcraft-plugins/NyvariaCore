@@ -69,7 +69,7 @@ public class NyvariaCoreListener implements Listener {
 
         if (invType == InventoryType.PLAYER) {
             CorePlayer corePlayer = plugin.getCorePlayerList().get(event.getPlayer());
-            corePlayer.invsee = false;
+            corePlayer.setIsInvseeing(false);
         }
     }
 
@@ -81,7 +81,7 @@ public class NyvariaCoreListener implements Listener {
         if (invType == InventoryType.PLAYER) {
             CorePlayer invPeeker = plugin.getCorePlayerList().get(event.getWhoClicked());
 
-            if (invPeeker.invsee) {
+            if (invPeeker.isInvseeing()) {
                 InventoryHolder invHolder = inv.getHolder();
 
                 if (invHolder != null && invHolder instanceof HumanEntity) {
@@ -89,7 +89,7 @@ public class NyvariaCoreListener implements Listener {
 
                     if (!invPeeker.hasPermission(NyvariaCore.PERM_INVSEE_MODIFY)
                             || invOwner.hasPermission(NyvariaCore.PERM_INVSEE_MODIFY_PREVENT)
-                            || !invOwner.player.isOnline()) {
+                            || !invOwner.getPlayer().isOnline()) {
                         event.setCancelled(true);
                         //invPeeker.updateInventory();
                     }

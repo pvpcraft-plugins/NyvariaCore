@@ -65,10 +65,10 @@ public class AfkCommand extends NyvariaCoreCommand implements CommandExecutor {
         // Toggle afk status
         if (corePlayer.isAfk()) {
             corePlayer.setAfk(false);
-            message.append(corePlayer.getPrettyName() + ChatColor.YELLOW + " is back");
+            message.append(corePlayer.getWrappedName() + ChatColor.YELLOW + " is back");
         } else {
             corePlayer.setAfk(true);
-            message.append(corePlayer.getPrettyName() + ChatColor.YELLOW + " is afk");
+            message.append(corePlayer.getWrappedName() + ChatColor.YELLOW + " is afk");
         }
 
         // Optionally append the message

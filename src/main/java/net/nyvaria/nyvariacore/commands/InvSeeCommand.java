@@ -89,9 +89,9 @@ public class InvSeeCommand extends NyvariaCoreCommand implements CommandExecutor
 
         // Grab the inventory and open it up
         Inventory inv = invPlayer.getInventory();
-        corePlayer.player.closeInventory();
-        corePlayer.player.openInventory(inv);
-        corePlayer.invsee = true;
+        corePlayer.getPlayer().closeInventory();
+        corePlayer.getPlayer().openInventory(inv);
+        corePlayer.setIsInvseeing(true);
 
         // Return a happy result
         return true;

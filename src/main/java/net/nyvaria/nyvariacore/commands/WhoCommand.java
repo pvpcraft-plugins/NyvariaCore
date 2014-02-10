@@ -82,7 +82,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
         int playerMax = this.plugin.getServer().getMaxPlayers();
 
         // Get a sorted list of the player group labels (with their players)
-        List<CoreGroupLabel> labelList = new CoreGroupLabelList(this.plugin).getSortedList();
+        List<CoreGroupLabel> labelList = new CoreGroupLabelList().getSortedList();
 
         // Iterate through them adding each group label to the message
         for (CoreGroupLabel coreGroupLabel : labelList) {
@@ -97,7 +97,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
                     if (playerIsVanished && !canSeeVanished) {
                         --playerCount;
                     } else {
-                        String playerName = coreGroup.prefix + corePlayer.player.getName() + coreGroup.suffix;
+                        String playerName = coreGroup.getPrefix() + corePlayer.getPlayer().getName() + coreGroup.getSuffix();
 
                         if (playerIsVanished && playerIsAfk) {
                             playerName += ChatColor.AQUA + " /* afk-vanished */";

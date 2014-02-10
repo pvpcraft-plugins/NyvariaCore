@@ -22,9 +22,12 @@
 package net.nyvaria.nyvariacore.coregroup;
 
 import net.nyvaria.component.util.StringUtils;
+import net.nyvaria.component.wrapper.NyvariaGroup;
 import net.nyvaria.nyvariacore.NyvariaCore;
+import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -32,28 +35,22 @@ import java.util.logging.Level;
 /**
  * @author Paul Thompson
  */
-public class CoreGroup implements Comparable<CoreGroup> {
-    public String name;
-    public String displayName;
-    public Integer priority;
-    public String prefix;
-    public String suffix;
+public class CoreGroup extends NyvariaGroup implements Comparable<CoreGroup> {
+    public static final String DEFAULT_GROUP_NAME = "Players";
 
+    public Integer priority;
     public CorePlayerList players;
 
     public CoreGroup(String name) {
-        this.name = name;
-        this.displayName = StringUtils.splitCamelCase(name);
+        super(name);
         this.priority = CoreGroup.getGroupPriority(name);
-        this.prefix = CoreGroup.getGroupPrefix(name);
-        this.suffix = CoreGroup.getGroupSuffix(name);
         this.players = new CorePlayerList();
 
-        NyvariaCore.instance.log(Level.FINER, "Group name        = " + this.name);
-        NyvariaCore.instance.log(Level.FINER, "Group displayName = " + this.displayName);
-        NyvariaCore.instance.log(Level.FINER, "Group priority    = " + this.priority);
-        NyvariaCore.instance.log(Level.FINER, "Group prefix      = " + this.prefix);
-        NyvariaCore.instance.log(Level.FINER, "Group suffix      = " + this.suffix);
+        NyvariaCore.getInstance().log(Level.FINER, "Group name     = " + this.getName());
+        NyvariaCore.getInstance().log(Level.FINER, "Group label    = " + this.getLabel());
+        NyvariaCore.getInstance().log(Level.FINER, "Group priority = " + this.priority);
+        NyvariaCore.getInstance().log(Level.FINER, "Group prefix   = " + this.getPrefix());
+        NyvariaCore.getInstance().log(Level.FINER, "Group suffix   = " + this.getSuffix());
     }
 
     public int compareTo(CoreGroup other) {
@@ -88,35 +85,12 @@ public class CoreGroup implements Comparable<CoreGroup> {
         return priority;
     }
 
-    public static String getGroupPrefix(String name) {
-        String prefix = null;
-
-        try {
-            prefix = NyvariaCore.zperms.getGroupMetadata(name, "prefix", String.class);
-            prefix = ChatColor.translateAlternateColorCodes('&', prefix);
-        } catch (Exception e) {
-        }
-
-        if (prefix == null) {
-            prefix = "";
-        }
-
-        return prefix;
+    public static CoreGroup getPrimaryGroup(CorePlayer corePlayer) {
+        return CoreGroup.getPrimaryGroup(corePlayer, CoreGroup.DEFAULT_GROUP_NAME);
     }
 
-    public static String getGroupSuffix(String name) {
-        String suffix = null;
-
-        try {
-            suffix = NyvariaCore.zperms.getGroupMetadata(name, "suffix", String.class);
-            suffix = ChatColor.translateAlternateColorCodes('&', suffix);
-        } catch (Exception e) {
-        }
-
-        if (suffix == null) {
-            suffix = "";
-        }
-
-        return suffix;
+    public static CoreGroup getPrimaryGroup(CorePlayer corePlayer, String defaultPrimaryGroup) {
+        String groupName = NyvariaGroup.getPrimaryGroupName(corePlayer.getOfflinePlayer(), defaultPrimaryGroup);
+        return groupName == null ? null : new CoreGroup(groupName);
     }
 }

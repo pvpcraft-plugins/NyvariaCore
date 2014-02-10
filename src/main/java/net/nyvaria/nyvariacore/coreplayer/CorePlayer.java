@@ -21,6 +21,8 @@
  */
 package net.nyvaria.nyvariacore.coreplayer;
 
+import net.nyvaria.component.wrapper.NyvariaGroup;
+import net.nyvaria.component.wrapper.NyvariaPlayer;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coregroup.CoreGroup;
 import org.bukkit.OfflinePlayer;
@@ -30,71 +32,68 @@ import org.bukkit.metadata.FixedMetadataValue;
 /**
  * @author Paul Thompson
  */
-public class CorePlayer implements Comparable<CorePlayer> {
-    public final OfflinePlayer offlinePlayer;
-    public final Player player;
-    public boolean invsee;
+public class CorePlayer extends NyvariaPlayer implements Comparable<CorePlayer> {
+    private boolean isInvseeing;
 
     public CorePlayer(Player player) {
-        this.player = player;
-        this.offlinePlayer = player;
-        this.invsee = false;
-
+        super(player, CoreGroup.DEFAULT_GROUP_NAME);
+        this.setIsInvseeing(false);
         this.setAfk(false);
     }
 
     public CorePlayer(OfflinePlayer offlinePlayer) {
-        this.player = null;
-        this.offlinePlayer = offlinePlayer;
-        this.invsee = false;
+        super(offlinePlayer, CoreGroup.DEFAULT_GROUP_NAME);
+        this.setIsInvseeing(false);
     }
 
     public void sendMessage(String message) {
-        if (player != null) {
-            this.player.sendMessage(message);
+        if (getPlayer() != null) {
+            getPlayer().sendMessage(message);
         }
     }
 
     public boolean hasPermission(String permission) {
-        if (player != null) {
-            return this.player.hasPermission(permission);
+        if (getPlayer() != null) {
+            return getPlayer().hasPermission(permission);
         }
         return false;
     }
 
-    public String getName() {
-        return offlinePlayer.getName();
-    }
-
+    /*
     public String getPrettyName() {
         String group = this.getPrimaryGroup();
         return CoreGroup.getGroupPrefix(group) + this.getName() + CoreGroup.getGroupSuffix(group);
     }
+    */
 
-    public String getPrimaryGroup() {
-        if (NyvariaCore.zperms != null) {
-            return NyvariaCore.zperms.getPlayerPrimaryGroup(this.getName());
-        } else {
-            return "Players";
-        }
+    public CoreGroup getPrimaryGroup() {
+        return CoreGroup.getPrimaryGroup(this);
     }
 
     public void setAfk(boolean afk) {
-        if (player != null) {
-            player.setMetadata("afk", new FixedMetadataValue(NyvariaCore.instance, afk));
+        if (getPlayer() != null) {
+            getPlayer().setMetadata("afk", new FixedMetadataValue(NyvariaCore.getInstance(), afk));
         }
     }
 
     public boolean isAfk() {
-        if ((player != null) && player.hasMetadata("afk")) {
-            return player.getMetadata("afk").get(0).asBoolean();
+        if ((getPlayer() != null) && getPlayer().hasMetadata("afk")) {
+            return getPlayer().getMetadata("afk").get(0).asBoolean();
         }
         return false;
     }
 
+    public void setIsInvseeing(boolean isInvSeeing) {
+        this.isInvseeing = isInvSeeing;
+    }
+
+    public boolean isInvseeing() {
+        return isInvseeing;
+    }
+
     public boolean isVanished() {
-        if ((player != null) && player.hasMetadata("vanished")) {
-            return player.getMetadata("vanished").get(0).asBoolean();
+        if ((getPlayer() != null) && getPlayer().hasMetadata("vanished")) {
+            return getPlayer().getMetadata("vanished").get(0).asBoolean();
         }
         return false;
     }
