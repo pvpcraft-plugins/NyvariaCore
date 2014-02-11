@@ -21,13 +21,10 @@
  */
 package net.nyvaria.nyvariacore.coregroup;
 
-import net.nyvaria.component.util.StringUtils;
 import net.nyvaria.component.wrapper.NyvariaGroup;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.logging.Level;

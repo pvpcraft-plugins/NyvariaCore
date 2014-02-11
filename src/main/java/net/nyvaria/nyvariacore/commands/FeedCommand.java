@@ -49,7 +49,7 @@ public class FeedCommand extends NyvariaCoreCommand implements CommandExecutor, 
 
         // If we have one argument, the first is a partial player name
         if (args.length == 1) {
-            if ((sender instanceof Player) && ((Player) sender).hasPermission(NyvariaCore.PERM_FEED)) {
+            if ((sender instanceof Player) && sender.hasPermission(NyvariaCore.PERM_FEED)) {
                 String partialPlayerName = args[0];
 
                 for (Player nextMatchingPlayer : plugin.getServer().matchPlayer(partialPlayerName)) {

@@ -121,7 +121,8 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 
                     groupMessage.append(playerName);
                     if (groupPlayerNameNum < groupPlayerNameCount) {
-                        groupMessage.append(ChatColor.GRAY + ", ");
+                        groupMessage.append(ChatColor.GRAY);
+                        groupMessage.append(", ");
                     }
                 }
 

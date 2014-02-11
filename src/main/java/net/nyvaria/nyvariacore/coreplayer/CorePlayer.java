@@ -21,7 +21,6 @@
  */
 package net.nyvaria.nyvariacore.coreplayer;
 
-import net.nyvaria.component.wrapper.NyvariaGroup;
 import net.nyvaria.component.wrapper.NyvariaPlayer;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coregroup.CoreGroup;
