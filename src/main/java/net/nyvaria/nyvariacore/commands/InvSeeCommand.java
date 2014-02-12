@@ -49,7 +49,7 @@ public class InvSeeCommand extends NyvariaCoreCommand implements CommandExecutor
 
         // If we have one argument, the first is a partial player name
         if (args.length == 1) {
-            if ((sender instanceof Player) && ((Player) sender).hasPermission(NyvariaCore.PERM_INVSEE)) {
+            if ((sender instanceof Player) && sender.hasPermission(NyvariaCore.PERM_INVSEE)) {
                 String partialPlayerName = args[0];
 
                 for (Player nextMatchingPlayer : plugin.getServer().matchPlayer(partialPlayerName)) {

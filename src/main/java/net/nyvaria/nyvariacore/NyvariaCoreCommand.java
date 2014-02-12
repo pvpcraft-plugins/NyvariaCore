@@ -91,6 +91,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
         return matchedPlayers;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected static boolean isPlayer(CommandSender sender, String cmd) {
         return NyvariaCoreCommand.isPlayer(sender, cmd, true);
     }
@@ -106,6 +107,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
         return true;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected static boolean hasCommandPermission(CommandSender sender, String permission) {
         if (sender instanceof Player) {
             return NyvariaCoreCommand.hasCommandPermission((Player) sender, permission);
@@ -116,6 +118,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
         return false;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected static boolean hasCommandPermission(CorePlayer corePlayer, String permission) {
         return NyvariaCoreCommand.hasCommandPermission(corePlayer.getPlayer(), permission);
     }
@@ -142,9 +145,7 @@ public abstract class NyvariaCoreCommand implements CommandExecutor {
         final StringBuilder stringBuilder = new StringBuilder();
 
         for (int i = start; i < args.length; ++i) {
-            if (i != start) {
-                stringBuilder.append(" ");
-            }
+            if (i != start) stringBuilder.append(" ");
             stringBuilder.append(args[i]);
         }
 

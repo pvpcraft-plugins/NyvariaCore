@@ -59,8 +59,9 @@ public class SudoCommand extends NyvariaCoreCommand implements CommandExecutor, 
             }
 
             // If we have two arguments, the second is a partial command
-        } else if (args.length == 2) {
-            // It would be nice if we could match on command names
+
+        //} else if (args.length == 2) {
+        //    It would be nice if we could match on command names
         }
 
         return completions;

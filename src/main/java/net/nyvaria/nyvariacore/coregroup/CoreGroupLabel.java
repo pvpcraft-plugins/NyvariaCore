@@ -22,6 +22,7 @@
 package net.nyvaria.nyvariacore.coregroup;
 
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
+import org.apache.commons.lang.Validate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +62,7 @@ public class CoreGroupLabel implements Comparable<CoreGroupLabel> {
     }
 
     public int compareTo(CoreGroupLabel other) {
+        Validate.notNull(other);
         return this.order.compareTo(other.order);
     }
 }

@@ -47,67 +47,59 @@ public class NyvariaCore extends NyvariaPlugin {
     public static String PERM_WHO                   = "nyvcore.who";
     public static String PERM_SEE_VANISHED          = "vanish.see";
 
-    // Core player list and listener and metrics
-    private CorePlayerList corePlayerList = null;
-    private NyvariaCoreListener listener = null;
+    // Core player list and listener
+    private NyvariaCoreListener listener       = null;
+    private CorePlayerList      corePlayerList = null;
 
     // zPermissions API
     public static ZPermissionsService zperms = null;
 
-    // Commands
-    private AfkCommand      cmdAfk      = null;
-    private FeedCommand     cmdFeed     = null;
-    private InvSeeCommand   cmdInvsee   = null;
-    private LastSeenCommand cmdLastSeen = null;
-    private SudoCommand     cmdSudo     = null;
-    private WhoCommand      cmdWho      = null;
-
     @Override
     public void onEnable() {
         // Initialise or update the configuration
-        this.saveDefaultConfig();
-        this.getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
 
         // Initialise optional hooks
         MetricsHook.enable(this);
 
         // Create an empty core player list and add all currently logged in players
-        this.corePlayerList = new CorePlayerList();
-        for (Player player : this.getServer().getOnlinePlayers()) {
-            this.corePlayerList.put(player);
+        corePlayerList = new CorePlayerList();
+        for (Player player : getServer().getOnlinePlayers()) {
+            corePlayerList.put(player);
         }
 
         // Create and register the listener
-        this.listener = new NyvariaCoreListener(this);
+        listener = new NyvariaCoreListener(this);
 
         // Load the zPermissions API
         loadZPermissionsService();
 
-        // Create and set the commands
-        this.cmdAfk      = new AfkCommand(this);
-        this.cmdFeed     = new FeedCommand(this);
-        this.cmdInvsee   = new InvSeeCommand(this);
-        this.cmdLastSeen = new LastSeenCommand(this);
-        this.cmdSudo     = new SudoCommand(this);
-        this.cmdWho      = new WhoCommand(this);
+        // Create the commands
+        AfkCommand      cmdAfk      = new AfkCommand(this);
+        FeedCommand     cmdFeed     = new FeedCommand(this);
+        InvSeeCommand   cmdInvsee   = new InvSeeCommand(this);
+        LastSeenCommand cmdLastSeen = new LastSeenCommand(this);
+        SudoCommand     cmdSudo     = new SudoCommand(this);
+        WhoCommand      cmdWho      = new WhoCommand(this);
 
         // Set the command executors
-        this.getCommand(AfkCommand.CMD).setExecutor(this.cmdAfk);
-        this.getCommand(FeedCommand.CMD).setExecutor(this.cmdFeed);
-        this.getCommand(InvSeeCommand.CMD).setExecutor(this.cmdInvsee);
-        this.getCommand(LastSeenCommand.CMD).setExecutor(this.cmdLastSeen);
-        this.getCommand(SudoCommand.CMD).setExecutor(this.cmdSudo);
-        this.getCommand(WhoCommand.CMD).setExecutor(this.cmdWho);
+        getCommand(AfkCommand.CMD).setExecutor(cmdAfk);
+        getCommand(FeedCommand.CMD).setExecutor(cmdFeed);
+        getCommand(InvSeeCommand.CMD).setExecutor(cmdInvsee);
+        getCommand(LastSeenCommand.CMD).setExecutor(cmdLastSeen);
+        getCommand(SudoCommand.CMD).setExecutor(cmdSudo);
+        getCommand(WhoCommand.CMD).setExecutor(cmdWho);
 
         // Set the command tab completers
-        this.getCommand(FeedCommand.CMD).setTabCompleter(this.cmdFeed);
-        this.getCommand(InvSeeCommand.CMD).setTabCompleter(this.cmdInvsee);
-        this.getCommand(LastSeenCommand.CMD).setTabCompleter(this.cmdLastSeen);
-        this.getCommand(SudoCommand.CMD).setTabCompleter(this.cmdSudo);
-        this.getCommand(WhoCommand.CMD).setTabCompleter(this.cmdWho);
+        getCommand(FeedCommand.CMD).setTabCompleter(cmdFeed);
+        getCommand(InvSeeCommand.CMD).setTabCompleter(cmdInvsee);
+        getCommand(LastSeenCommand.CMD).setTabCompleter(cmdLastSeen);
+        getCommand(SudoCommand.CMD).setTabCompleter(cmdSudo);
+        getCommand(WhoCommand.CMD).setTabCompleter(cmdWho);
 
         // Print a lovely message
-        this.log("Enabling %1$s successful", this.getNameAndVersion());
+        log("Enabling %1$s successful", getNameAndVersion());
     }
 
     @Override
@@ -119,10 +111,11 @@ public class NyvariaCore extends NyvariaPlugin {
         NyvariaCore.zperms = null;
 
         // Destroy the core player list
-        this.corePlayerList = null;
+        listener       = null;
+        corePlayerList = null;
 
         // Print a lovely message
-        this.log("Disabling %s successful", this.getNameAndVersion());
+        log("Disabling %s successful", getNameAndVersion());
     }
 
     /**
@@ -140,11 +133,11 @@ public class NyvariaCore extends NyvariaPlugin {
         try {
             NyvariaCore.zperms = Bukkit.getServicesManager().load(ZPermissionsService.class);
         } catch (NoClassDefFoundError e) {
-            this.log(Level.WARNING, "ZPermissionsService class not found - zPerms support disabled!");
+            log(Level.WARNING, "ZPermissionsService class not found - zPerms support disabled!");
             NyvariaCore.zperms = null;
         } finally {
             if (NyvariaCore.zperms == null) {
-                this.log(Level.WARNING, "ZPermissionsService instance unexpectedly null after loading - zPerms support disabled!");
+                log(Level.WARNING, "ZPermissionsService instance unexpectedly null after loading - zPerms support disabled!");
             }
         }
 

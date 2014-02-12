@@ -73,9 +73,9 @@ public class AfkCommand extends NyvariaCoreCommand implements CommandExecutor {
 
         // Optionally append the message
         if (args.length > 0) {
-            message.append(":" + ChatColor.WHITE);
+            message.append(":").append(ChatColor.WHITE);
             for (String arg : args) {
-                message.append(" " + arg);
+                message.append(" ").append(arg);
             }
         }
 

@@ -24,6 +24,7 @@ package net.nyvaria.nyvariacore.coreplayer;
 import net.nyvaria.component.wrapper.NyvariaPlayer;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coregroup.CoreGroup;
+import org.apache.commons.lang.Validate;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -35,13 +36,13 @@ public class CorePlayer extends NyvariaPlayer implements Comparable<CorePlayer> 
     private boolean isInvseeing;
 
     public CorePlayer(Player player) {
-        super(player, CoreGroup.DEFAULT_GROUP_NAME);
+        super(player);
         this.setIsInvseeing(false);
         this.setAfk(false);
     }
 
     public CorePlayer(OfflinePlayer offlinePlayer) {
-        super(offlinePlayer, CoreGroup.DEFAULT_GROUP_NAME);
+        super(offlinePlayer);
         this.setIsInvseeing(false);
     }
 
@@ -52,10 +53,7 @@ public class CorePlayer extends NyvariaPlayer implements Comparable<CorePlayer> 
     }
 
     public boolean hasPermission(String permission) {
-        if (getPlayer() != null) {
-            return getPlayer().hasPermission(permission);
-        }
-        return false;
+        return (getPlayer() != null) && getPlayer().hasPermission(permission);
     }
 
     /*
@@ -76,10 +74,9 @@ public class CorePlayer extends NyvariaPlayer implements Comparable<CorePlayer> 
     }
 
     public boolean isAfk() {
-        if ((getPlayer() != null) && getPlayer().hasMetadata("afk")) {
-            return getPlayer().getMetadata("afk").get(0).asBoolean();
-        }
-        return false;
+        return (getPlayer() != null)
+                && getPlayer().hasMetadata("afk")
+                && getPlayer().getMetadata("afk").get(0).asBoolean();
     }
 
     public void setIsInvseeing(boolean isInvSeeing) {
@@ -91,13 +88,13 @@ public class CorePlayer extends NyvariaPlayer implements Comparable<CorePlayer> 
     }
 
     public boolean isVanished() {
-        if ((getPlayer() != null) && getPlayer().hasMetadata("vanished")) {
-            return getPlayer().getMetadata("vanished").get(0).asBoolean();
-        }
-        return false;
+        return (getPlayer() != null)
+                && getPlayer().hasMetadata("vanished")
+                && getPlayer().getMetadata("vanished").get(0).asBoolean();
     }
 
     public int compareTo(CorePlayer other) {
+        Validate.notNull(other);
         return this.getName().compareTo(other.getName());
     }
 }

@@ -47,7 +47,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
     }
 
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        ArrayList<String> completions = new ArrayList<String>();
+        //ArrayList<String> completions = new ArrayList<String>();
 
         // If we have one argument, the first is a partial player name
         /*
@@ -62,7 +62,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
         }
         */
 
-        return completions;
+        return new ArrayList<String>();
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -121,8 +121,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
 
                     groupMessage.append(playerName);
                     if (groupPlayerNameNum < groupPlayerNameCount) {
-                        groupMessage.append(ChatColor.GRAY);
-                        groupMessage.append(", ");
+                        groupMessage.append(ChatColor.GRAY).append(", ");
                     }
                 }
 

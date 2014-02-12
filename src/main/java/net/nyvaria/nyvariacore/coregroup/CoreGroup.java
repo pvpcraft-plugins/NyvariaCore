@@ -25,6 +25,7 @@ import net.nyvaria.component.wrapper.NyvariaGroup;
 import net.nyvaria.nyvariacore.NyvariaCore;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayer;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
+import org.apache.commons.lang.Validate;
 
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -51,6 +52,7 @@ public class CoreGroup extends NyvariaGroup implements Comparable<CoreGroup> {
     }
 
     public int compareTo(CoreGroup other) {
+        Validate.notNull(other);
         return other.priority.compareTo(this.priority);
     }
 
@@ -69,7 +71,7 @@ public class CoreGroup extends NyvariaGroup implements Comparable<CoreGroup> {
     }
 
     private static Integer getGroupPriority(String name) {
-        Integer priority = null;
+        Integer priority;
 
         //priority = NyvariaCore.zperms.getGroupMetadata(name, "priority", Integer.class);
 
