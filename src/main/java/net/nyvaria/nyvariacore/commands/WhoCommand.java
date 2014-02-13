@@ -47,10 +47,10 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
     }
 
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        //ArrayList<String> completions = new ArrayList<String>();
+        /*
+        ArrayList<String> completions = new ArrayList<String>();
 
         // If we have one argument, the first is a partial player name
-        /*
         if (args.length == 1) {
             if ( (sender instanceof Player) && ((Player) sender).hasPermission(NyvariaCore.PERM_INVSEE) ) {
                 String partialPlayerName = args[0];
@@ -97,7 +97,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
                     if (playerIsVanished && !canSeeVanished) {
                         --playerCount;
                     } else {
-                        String playerName = coreGroup.getPrefix() + corePlayer.getPlayer().getName() + coreGroup.getSuffix();
+                        String playerName = corePlayer.getWrappedName();
 
                         if (playerIsVanished && playerIsAfk) {
                             playerName += ChatColor.AQUA + " /* afk-vanished */";

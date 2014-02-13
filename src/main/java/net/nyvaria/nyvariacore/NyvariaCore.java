@@ -21,7 +21,10 @@
  */
 package net.nyvaria.nyvariacore;
 
+import net.nyvaria.component.exception.CannotEnablePluginException;
 import net.nyvaria.component.hook.MetricsHook;
+import net.nyvaria.component.hook.VaultHook;
+import net.nyvaria.component.hook.ZPermissionsHook;
 import net.nyvaria.component.wrapper.NyvariaPlugin;
 import net.nyvaria.nyvariacore.commands.*;
 import net.nyvaria.nyvariacore.coreplayer.CorePlayerList;
@@ -51,64 +54,73 @@ public class NyvariaCore extends NyvariaPlugin {
     private NyvariaCoreListener listener       = null;
     private CorePlayerList      corePlayerList = null;
 
-    // zPermissions API
-    public static ZPermissionsService zperms = null;
-
     @Override
     public void onEnable() {
-        // Initialise or update the configuration
-        saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
+        try {
+            // Initialise or update the configuration
+            saveDefaultConfig();
+            getConfig().options().copyDefaults(true);
 
-        // Initialise optional hooks
-        MetricsHook.enable(this);
+            // Initialise required hooks
+            if (!VaultHook.enable(this)) {
+                throw new CannotEnablePluginException("Vault not found");
+            }
 
-        // Create an empty core player list and add all currently logged in players
-        corePlayerList = new CorePlayerList();
-        for (Player player : getServer().getOnlinePlayers()) {
-            corePlayerList.put(player);
+            if (!ZPermissionsHook.enable(this)) {
+                throw new CannotEnablePluginException("ZPermissions not found");
+            }
+
+            // Initialise optional hooks
+            MetricsHook.enable(this);
+
+            // Create an empty core player list and add all currently logged in players
+            corePlayerList = new CorePlayerList();
+            for (Player player : getServer().getOnlinePlayers()) {
+                corePlayerList.put(player);
+            }
+
+            // Create and register the listener
+            listener = new NyvariaCoreListener(this);
+
+            // Create the commands
+            AfkCommand      cmdAfk      = new AfkCommand(this);
+            FeedCommand     cmdFeed     = new FeedCommand(this);
+            InvSeeCommand   cmdInvsee   = new InvSeeCommand(this);
+            LastSeenCommand cmdLastSeen = new LastSeenCommand(this);
+            SudoCommand     cmdSudo     = new SudoCommand(this);
+            WhoCommand      cmdWho      = new WhoCommand(this);
+
+            // Set the command executors
+            getCommand(AfkCommand.CMD).setExecutor(cmdAfk);
+            getCommand(FeedCommand.CMD).setExecutor(cmdFeed);
+            getCommand(InvSeeCommand.CMD).setExecutor(cmdInvsee);
+            getCommand(LastSeenCommand.CMD).setExecutor(cmdLastSeen);
+            getCommand(SudoCommand.CMD).setExecutor(cmdSudo);
+            getCommand(WhoCommand.CMD).setExecutor(cmdWho);
+
+            // Set the command tab completers
+            getCommand(FeedCommand.CMD).setTabCompleter(cmdFeed);
+            getCommand(InvSeeCommand.CMD).setTabCompleter(cmdInvsee);
+            getCommand(LastSeenCommand.CMD).setTabCompleter(cmdLastSeen);
+            getCommand(SudoCommand.CMD).setTabCompleter(cmdSudo);
+            getCommand(WhoCommand.CMD).setTabCompleter(cmdWho);
+
+        } catch (CannotEnablePluginException e) {
+            log("Enabling %1$s failed - %2$s", getNameAndVersion(), e.getMessage());
+            e.printStackTrace();
+            getServer().getPluginManager().disablePlugin(this);
+
+        } finally {
+            log("Enabling %1$s successful", getNameAndVersion());
         }
-
-        // Create and register the listener
-        listener = new NyvariaCoreListener(this);
-
-        // Load the zPermissions API
-        loadZPermissionsService();
-
-        // Create the commands
-        AfkCommand      cmdAfk      = new AfkCommand(this);
-        FeedCommand     cmdFeed     = new FeedCommand(this);
-        InvSeeCommand   cmdInvsee   = new InvSeeCommand(this);
-        LastSeenCommand cmdLastSeen = new LastSeenCommand(this);
-        SudoCommand     cmdSudo     = new SudoCommand(this);
-        WhoCommand      cmdWho      = new WhoCommand(this);
-
-        // Set the command executors
-        getCommand(AfkCommand.CMD).setExecutor(cmdAfk);
-        getCommand(FeedCommand.CMD).setExecutor(cmdFeed);
-        getCommand(InvSeeCommand.CMD).setExecutor(cmdInvsee);
-        getCommand(LastSeenCommand.CMD).setExecutor(cmdLastSeen);
-        getCommand(SudoCommand.CMD).setExecutor(cmdSudo);
-        getCommand(WhoCommand.CMD).setExecutor(cmdWho);
-
-        // Set the command tab completers
-        getCommand(FeedCommand.CMD).setTabCompleter(cmdFeed);
-        getCommand(InvSeeCommand.CMD).setTabCompleter(cmdInvsee);
-        getCommand(LastSeenCommand.CMD).setTabCompleter(cmdLastSeen);
-        getCommand(SudoCommand.CMD).setTabCompleter(cmdSudo);
-        getCommand(WhoCommand.CMD).setTabCompleter(cmdWho);
-
-        // Print a lovely message
-        log("Enabling %1$s successful", getNameAndVersion());
     }
 
     @Override
     public void onDisable() {
         // Disable the hooks
         MetricsHook.disable();
-
-        // Unload zPermissions
-        NyvariaCore.zperms = null;
+        ZPermissionsHook.disable();
+        VaultHook.disable();
 
         // Destroy the core player list
         listener       = null;
@@ -125,23 +137,6 @@ public class NyvariaCore extends NyvariaPlugin {
      */
     public static NyvariaCore getInstance() {
         return JavaPlugin.getPlugin(NyvariaCore.class);
-    }
-
-    private boolean loadZPermissionsService() {
-        NyvariaCore.zperms = null;
-
-        try {
-            NyvariaCore.zperms = Bukkit.getServicesManager().load(ZPermissionsService.class);
-        } catch (NoClassDefFoundError e) {
-            log(Level.WARNING, "ZPermissionsService class not found - zPerms support disabled!");
-            NyvariaCore.zperms = null;
-        } finally {
-            if (NyvariaCore.zperms == null) {
-                log(Level.WARNING, "ZPermissionsService instance unexpectedly null after loading - zPerms support disabled!");
-            }
-        }
-
-        return (NyvariaCore.zperms != null);
     }
 
     /**
