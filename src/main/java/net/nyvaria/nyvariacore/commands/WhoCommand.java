@@ -78,7 +78,7 @@ public class WhoCommand extends NyvariaCoreCommand implements CommandExecutor, T
         StringBuilder message = new StringBuilder();
 
         // Find the player numbers
-        int playerCount = this.plugin.getServer().getOnlinePlayers().length;
+        int playerCount = this.plugin.getServer().getOnlinePlayers().size();
         int playerMax = this.plugin.getServer().getMaxPlayers();
 
         // Get a sorted list of the player group labels (with their players)
